@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f5f0; --card:#ffffff; --sunk:#f1efe8; --ink:#14233b; --ink2:#33415a; --muted:#6b778c; --line:#e7e5dd;
+    --bg:#f6f5f0; --card:#ffffff; --sunk:#f1efe8; --ink:#14233b; --ink2:#33415a; --muted:#5b6678; --line:#e7e5dd;
     --coral:#e8572f; --coral-dk:#cc4520; --coral-soft:#fde9e2; --mint:#6fd6b6; --mint-deep:#1b8a6b; --mint-soft:#e4f6ef;
     --warn:#8a5a00; --warn-bg:#fff3d6; --bad:#b42318; --bad-bg:#fdecea;
     --shadow:0 1px 2px rgba(20,35,59,.05),0 10px 24px -14px rgba(20,35,59,.28);
@@ -20,16 +20,16 @@
     font-family:"Prompt","Noto Sans Thai","Leelawadee UI",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.5}
   button{font:inherit;color:inherit}
   svg{display:block;flex:none}
-  .frame{max-width:1040px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:112px}
+  .frame{--gut:clamp(16px,3.2vw,56px);width:100%;margin:0 auto;min-height:100vh;position:relative;padding-bottom:112px}
   .narrow{max-width:520px;margin:0 auto}
   .banner{background:var(--warn-bg);color:var(--warn);font-size:12.5px;padding:6px 16px;text-align:center}
-  main{padding:0 16px}
+  main{padding:0 var(--gut)}
   h2{font-size:18px;margin:26px 0 12px;font-weight:700}
   .note{font-size:12.5px;color:var(--muted)}
   .err{color:var(--bad);font-size:13.5px;margin-top:12px;background:var(--bad-bg);border-radius:12px;padding:9px 12px}
 
   /* ---------- หน้าแรก ---------- */
-  .home-head{padding:26px 16px 6px;text-align:left}
+  .home-head{padding:26px var(--gut) 6px;text-align:left}
   .home-head .eyebrow,.eyerow .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mint-deep);background:var(--mint-soft);border-radius:999px;padding:3px 10px;font-weight:500}
   .home-head h1{margin:10px 0 2px;font-size:30px;line-height:1.15;font-weight:700}
   .home-head p{margin:0;color:var(--muted)}
@@ -37,7 +37,7 @@
   .search:focus-within{border-color:var(--mint);box-shadow:0 0 0 4px rgba(111,214,182,.22)}
   .search input[type=text]{border:0;outline:0;background:none;padding:0;height:100%;font:inherit;font-size:16px;color:var(--ink);flex:1;min-width:0;border-radius:0}
   .search input[type=text]:focus{outline:0}
-  .search input::placeholder{color:#a3a9b5}
+  .search input::placeholder{color:#8a92a0}
   .search .clear{border:0;background:var(--sunk);border-radius:50%;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:none}
   .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
   .bcard{position:relative;border-radius:20px;overflow:hidden;cursor:pointer;background:var(--ink);box-shadow:var(--shadow);aspect-ratio:16/10;border:0;padding:0;text-align:left;display:block;width:100%}
@@ -50,12 +50,12 @@
   .bcard .go{flex:none;background:#fff;color:var(--ink);border-radius:999px;padding:7px 12px 7px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px}
   .bcard.noimg{background:linear-gradient(135deg,var(--mint-deep),#0f5a46)}
   .mast{background:radial-gradient(120% 140% at 0% 0%,#e3f6ee 0%,rgba(227,246,238,0) 55%),radial-gradient(120% 140% at 100% 0%,#fde9e2 0%,rgba(253,233,226,0) 50%),var(--bg);border-bottom:1px solid var(--line)}
-  .mast-in{max-width:1040px;margin:0 auto;padding:28px 16px 18px;display:flex;gap:24px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+  .mast-in{margin:0 auto;padding:28px var(--gut) 18px;display:flex;gap:24px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
   .mast-t{min-width:0}
   .mast-t h1{margin:10px 0 2px;font-size:32px;line-height:1.15;font-weight:700;letter-spacing:-.2px}
   .mast-t p{margin:0;color:var(--muted);font-size:14px}
   .mast .mast-s{flex:0 1 440px;min-width:280px}
-  .mast-s.under{padding:14px 16px 0}
+  .mast-s.under{padding:14px var(--gut) 0}
   .infobar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:16px 0 12px;font-size:13.5px;color:var(--muted);min-height:30px}
   .infobar b{color:var(--ink);font-weight:600}
   .infobar .active{padding:0}
@@ -103,7 +103,7 @@
     .mast-s.under{padding:10px 16px}
     .infobar{margin-top:10px}
   }
-  .bstrip{padding:16px 16px 0}
+  .bstrip{padding:16px var(--gut) 0}
   .bstrip-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .bstrip-h b{font-size:15px}
   .bstrip-h button{display:flex;align-items:center;gap:2px;border:0;background:none;color:var(--mint-deep);font-size:13.5px;font-weight:500;cursor:pointer;padding:4px 0}
@@ -125,33 +125,34 @@
   /* ---------- หน้าแบรนด์ / สินค้า ---------- */
   .hero{position:relative;height:230px;overflow:hidden;background:var(--ink)}
   .hero img{width:100%;height:100%;object-fit:cover;object-position:center 65%}
-  @media (min-width:900px){ .hero{height:340px} .hero img{object-position:center 55%} } /* จอกว้าง: หัวแบรนด์สูงขึ้น สินค้าไม่ถูกตัด */
+  @media (min-width:900px){ .hero{height:clamp(320px,26vw,560px)} .hero img{object-position:center 55%} } /* จอกว้าง: หัวแบรนด์สูงขึ้น สินค้าไม่ถูกตัด */
   .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(14,24,40,.75),rgba(14,24,40,.05) 60%)}
-  .hero .t{position:absolute;left:18px;right:18px;bottom:16px;color:#fff;z-index:1}
+  .hero .t{position:absolute;left:var(--gut);right:var(--gut);bottom:16px;color:#fff;z-index:1}
   .hero .t b{display:block;font-size:30px;line-height:1.1}
   .hero .t span{font-size:13.5px;letter-spacing:1.5px;opacity:.9}
-  .hero.plain{height:auto;background:none;padding:20px 16px 0} .hero.plain:after{display:none}
+  .hero.plain{height:auto;background:none;padding:20px var(--gut) 0} .hero.plain:after{display:none}
   .hero.plain .t{position:static;color:var(--ink)} .hero.plain .t span{color:var(--muted);letter-spacing:0}
   .back{position:absolute;left:12px;top:12px;z-index:2;display:flex;align-items:center;gap:4px;border:0;background:rgba(255,255,255,.92);color:var(--ink);border-radius:999px;padding:7px 13px 7px 9px;font-size:13.5px;font-weight:500;cursor:pointer;box-shadow:0 4px 12px -4px rgba(0,0,0,.3)}
   .hero.plain .back{position:static;margin-bottom:12px;background:var(--card);border:1px solid var(--line);box-shadow:none}
   .filters{position:sticky;top:0;z-index:6;background:rgba(246,245,240,.94);backdrop-filter:blur(8px);padding:12px 0 8px}
-  @media (max-width:760px){ .filters{padding:12px 16px 8px;margin:0 -16px} }
+  @media (max-width:760px){ .filters{padding:12px var(--gut) 8px;margin:0 calc(-1 * var(--gut))} }
   .chipsx{display:flex;gap:7px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none} .chipsx::-webkit-scrollbar{display:none}
   .chipsx button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:13.5px;cursor:pointer;color:var(--ink2);white-space:nowrap}
   .chipsx button.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:500}
   .chipsx button small{opacity:.65;margin-left:4px}
   .resinfo{display:flex;justify-content:space-between;align-items:center;margin:8px 0 12px;font-size:13px;color:var(--muted)}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+  @media (min-width:1600px){ .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px} .layout{grid-template-columns:260px 1fr} }
   .card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
   .pic{position:relative;aspect-ratio:1/1;cursor:pointer;background:#fff;border-bottom:1px solid var(--line)}
   .pic img{position:absolute;inset:12px;width:calc(100% - 24px);height:calc(100% - 24px);object-fit:contain;transition:transform .3s}
   .card:hover .pic img{transform:scale(1.03)}
-  .body .meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11.5px;line-height:1.3;margin-bottom:2px;min-width:0}
+  .body .meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:12.5px;line-height:1.3;margin-bottom:2px;min-width:0}
   .body .ct{color:var(--muted);background:var(--sunk);border-radius:999px;padding:1px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
   .body .dotsep{color:var(--line)}
-  .ph{position:absolute;inset:14px;border:1px dashed var(--line);border-radius:12px;display:grid;place-items:center;font-size:12px;color:#a9a79f}
+  .ph{position:absolute;inset:14px;border:1px dashed var(--line);border-radius:12px;display:grid;place-items:center;font-size:12.5px;color:#8a8880}
   .body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:2px;flex:1}
-  .body .bn{font-size:11.5px;color:var(--mint-deep);font-weight:600;letter-spacing:.4px}
+  .body .bn{font-size:12.5px;color:var(--mint-deep);font-weight:600;letter-spacing:.4px}
   .body b{font-size:15px;line-height:1.3;font-weight:600;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .body .sz{font-size:12.5px;color:var(--muted)}
   .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px;min-height:44px;gap:6px}
@@ -195,21 +196,30 @@
   .cimg img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:contain}
   .cimg .ph{inset:4px;font-size:0}
   .cinfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;padding-right:26px}
-  .cinfo .cbn{font-size:11.5px;color:var(--mint-deep);font-weight:600;letter-spacing:.3px}
+  .cinfo .cbn{font-size:12.5px;color:var(--mint-deep);font-weight:600;letter-spacing:.3px}
   .cinfo b{font-size:14.5px;line-height:1.3;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .cinfo .cup{font-size:12.5px;color:var(--muted)}
   .crow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
   .csum{font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
-  .crm{position:absolute;top:10px;right:8px;width:32px;height:32px;border:0;background:none;border-radius:50%;color:#a9afba;cursor:pointer;display:grid;place-items:center}
+  .crm{position:absolute;top:10px;right:8px;width:32px;height:32px;border:0;background:none;border-radius:50%;color:#8a92a0;cursor:pointer;display:grid;place-items:center}
   .crm:hover,.crm:active{background:var(--bad-bg);color:var(--bad)}
   .addmore{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border:0;background:none;padding:13px;color:var(--mint-deep);font-weight:500;cursor:pointer}
   .srow{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-variant-numeric:tabular-nums}
   .srow.muted{font-size:13px;color:var(--muted)}
   .price.sale{color:var(--coral);display:inline-flex;align-items:baseline;gap:5px;flex-wrap:wrap}
   .price.sale s{color:var(--muted);font-weight:400;font-size:12.5px}
+  .add,.stp button,.cpn button,.lang button{position:relative}
+  .add::after,.stp button::after,.crm::after,.cpn button::after,.lang button::after{content:'';position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+  .stp button::after{width:36px}
+  .ferr{color:var(--bad);font-size:13px;margin:6px 0 0}
+  input.bad,textarea.bad{border-color:var(--bad)}
+  .notice{background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:11px 14px;font-size:14px;margin:12px 0;text-align:left}
+  .notice b{display:block;color:var(--ink);margin-bottom:2px}
+  .backtab{background:var(--mint-soft);border-radius:12px;padding:11px 14px;font-size:14px;margin:12px 0 0;text-align:left;color:var(--ink2)}
+  .backtab b{color:var(--mint-deep)}
   .seller{margin:14px auto 0;max-width:520px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.6;display:flex;flex-direction:column;gap:1px}
   .seller b{color:var(--ink2);font-weight:600;font-size:13px}
-  .slabel{display:inline-block;align-self:flex-start;margin-top:4px;background:var(--coral-soft);color:var(--coral-dk);font-size:11.5px;font-weight:600;border-radius:6px;padding:2px 7px;line-height:1.4}
+  .slabel{display:inline-block;align-self:flex-start;margin-top:4px;background:var(--coral-soft);color:var(--coral-dk);font-size:12px;font-weight:600;border-radius:6px;padding:2px 7px;line-height:1.4}
   .salebadge{position:absolute;left:8px;top:8px;background:var(--coral);color:#fff;font-weight:700;font-size:12.5px;border-radius:999px;padding:3px 9px;z-index:1}
   .cinfo .cup s,.panel s{color:var(--muted)} .cinfo .cup em{font-style:normal;color:var(--coral);font-weight:600}
   .srow.disc,.sub.disc{color:var(--mint-deep);font-weight:600}
@@ -239,8 +249,8 @@
   .c-items{grid-area:items} .c-sum{grid-area:sum} .c-buyer{grid-area:buyer} .c-foot{grid-area:foot}
   .dpay,.dsec{display:none}
   @media (min-width:900px){
-    .cbar{max-width:1040px;padding:16px 16px 6px}
-    .cgrid{max-width:1040px;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"items sum" "buyer sum" "foot sum";column-gap:20px;align-items:start}
+    .cbar{max-width:none;padding:16px var(--gut) 6px}
+    .cgrid{max-width:none;padding:0 var(--gut);grid-template-columns:minmax(0,1fr) clamp(340px,28vw,440px);grid-template-areas:"items sum" "buyer sum" "foot sum";column-gap:20px;align-items:start}
     .c-sum{position:sticky;top:76px}
     .dpay{display:flex;margin-top:16px}
     .dsec{display:flex;justify-content:center;margin:10px 0 0}
@@ -253,7 +263,7 @@
   .paybar div{flex:1;min-width:0} .paybar small{display:block;font-size:12px;color:var(--muted)}
   .paybar b{display:block;font-size:19px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .paybar .btn{width:auto;flex:none;padding:14px 20px;gap:4px;justify-content:center}
-  .topnav{display:flex;align-items:center;gap:8px;padding:16px 16px 0}
+  .topnav{display:flex;align-items:center;gap:8px;padding:16px var(--gut) 0}
   .topnav button{display:flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 13px 6px 9px;font-size:13.5px;cursor:pointer}
   .topnav span{margin-left:auto;font-size:13px;color:var(--muted)}
   .panel{background:var(--card);border-radius:18px;padding:6px 16px;box-shadow:var(--shadow)}
@@ -271,7 +281,7 @@
   .sub:last-child{padding-bottom:10px}
   label{display:block;font-size:13px;color:var(--ink2);margin:12px 0 4px;font-weight:500}
   input[type=text],input[type=tel],input[type=email],textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;color:var(--ink);background:#fff;transition:border-color .15s,box-shadow .15s}
-  input::placeholder,textarea::placeholder{color:#a9afba}
+  input::placeholder,textarea::placeholder{color:#8a92a0}
   input:focus,textarea:focus{outline:2px solid var(--mint);border-color:var(--mint)}
   textarea{min-height:70px;resize:vertical}
   .check{display:flex;gap:10px;align-items:center;margin:14px 0 6px;font-size:15px;color:var(--ink);background:var(--card);border-radius:14px;padding:13px;border:1px solid var(--line);cursor:pointer;font-weight:500}
@@ -301,16 +311,16 @@
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chips span{background:var(--mint-soft);color:var(--mint-deep);border-radius:999px;padding:3px 10px;font-size:12.5px}
   .helpln{text-align:center;margin:18px 0 0}
-  .helpln button{border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline;cursor:pointer;padding:6px}
+  .helpln button{border:0;background:none;color:var(--muted);font-size:14px;text-decoration:underline;cursor:pointer;padding:10px 8px;min-height:44px}
   .helpln button:hover{color:var(--coral)}
   .sheet.help .hh{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 0}
   .sheet.help .hh b{font-size:19px}
   .sheet.help .x{position:static;box-shadow:none;background:var(--sunk)}
   .lang{display:inline-flex;background:var(--sunk);border-radius:999px;padding:3px;gap:2px;flex:none}
-  .lang button{border:0;background:none;border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;line-height:1.3}
+  .lang button{border:0;background:none;border-radius:999px;padding:6px 12px;min-height:32px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;line-height:1.3}
   .lang button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,35,59,.18)}
   .lang.onhero{position:absolute;right:14px;top:14px;z-index:2;background:rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.12)}
-  .lang.sm button{padding:3px 8px;font-size:12px}
+  .lang.sm button{padding:5px 10px;font-size:12.5px;min-height:30px}
   .eyerow{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .langrow{display:flex;justify-content:flex-end;margin:12px 0 -4px}
   .rcbox{background:var(--card);border-radius:20px;padding:16px;margin-top:14px;box-shadow:0 10px 26px -18px rgba(20,35,59,.45);text-align:center}
@@ -533,14 +543,14 @@ function brandsView(){
 // ---------------------------------------------------------------- หน้าสินค้า (แบรนด์เดียว หรือทุกแบรนด์)
 
 function stepper(p){
-  if (p.price == null) return `<span class="soon">${L('เร็ว ๆ นี้', 'Coming soon')}</span>`;
+  if (p.price == null) return `<span class="soon">${L('เร็ว ๆ นี้ · ยังไม่เปิดขาย', 'Coming soon')}</span>`;
   if (!SHOP.open) return '';
   const q = state.cart[p.id] || 0, id = esc(p.id);
   return q ? `<div class="stp"><button onclick="qty('${id}',-1)" aria-label="${L('ลดจำนวน', 'Decrease')}">−</button><input class="qn" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" value="${q}" aria-label="${L('จำนวน', 'Quantity')} ${esc(p.name)}"
              onfocus="this.select()" onkeydown="if(event.key==='Enter')this.blur()" oninput="this.value=this.value.replace(/\\D/g,'')" onchange="setQty('${id}', this.value)"><button class="p" onclick="qty('${id}',1)" aria-label="${L('เพิ่มจำนวน', 'Increase')}">+</button></div>`
            : `<button class="add" onclick="qty('${id}',1)" aria-label="${L('เพิ่ม ' + esc(p.name) + ' ลงตะกร้า', 'Add ' + esc(p.name) + ' to cart')}">${svg(I.plus, 20)}</button>`;
 }
-const priceTag = p => p.price == null ? `<span class="note">${L('ยังไม่กำหนดราคา', 'Price not set')}</span>`
+const priceTag = p => p.price == null ? ''
   : p.was ? `<span class="price sale"><s>${p.was.toLocaleString('th-TH')}</s>${p.price.toLocaleString('th-TH')} <small>${L('บาท', 'THB')}</small></span>`
   : `<span class="price">${p.price.toLocaleString('th-TH')} <small>${L('บาท', 'THB')}</small></span>`;
 const saleBadge = p => p.was ? `<span class="salebadge">-${pct(p)}%</span>` : '';
@@ -661,19 +671,23 @@ function cartView(){
 
     <section class="cbox pad c-buyer"><h3>${svg(I.user, 18)}${L('ข้อมูลผู้ซื้อ', 'Buyer details')}</h3>
       <p class="note" style="margin:-4px 0 4px">${L('กรอกชื่อผู้จ่าย ชื่อบริษัท หรือทั้งสองช่อง', 'Enter your name, company name, or both')}</p>
-      <label for="f_name">${L('ชื่อผู้จ่าย', 'Your name')}</label><input type="text" id="f_name" maxlength="100" autocomplete="name" placeholder="${L('ชื่อ-นามสกุล', 'Full name')}" value="${esc(f.name)}">
+      <label for="f_name">${L('ชื่อผู้จ่าย', 'Your name')}</label><input type="text" id="f_name" maxlength="100" autocomplete="name" placeholder="${L('ชื่อ-นามสกุล', 'Full name')}" value="${esc(f.name)}" class="${state.errField === 'name' ? 'bad' : ''}">${fieldErr('name')}
       <label for="f_company">${L('ชื่อบริษัท', 'Company')}</label><input type="text" id="f_company" maxlength="200" autocomplete="organization" placeholder="${L('ถ้าซื้อในนามบริษัท', 'If buying for a company')}" value="${esc(f.company)}">
       <label for="f_phone">${L('เบอร์โทร', 'Phone')} <span class="note">${L('(ไม่บังคับ)', '(optional)')}</span></label><input type="tel" id="f_phone" maxlength="20" autocomplete="tel" inputmode="tel" placeholder="08x-xxx-xxxx" value="${esc(f.phone)}">
 
       <label class="taxsw"><span><b>${L('ต้องการใบกำกับภาษี', 'I need a full tax invoice')}</b><small>${L('เต็มรูป ออกโดยพนักงานหลังชำระเงิน', 'Issued by our staff after payment')}</small></span>
         <input type="checkbox" id="f_tax" ${f.tax ? 'checked' : ''} onchange="toggleTax()"><i></i></label>
       ${f.tax ? `<div class="taxbox">
-        <label for="f_tname">${L('ชื่อบุคคล / นิติบุคคล', 'Name (person or company)')}</label><input type="text" id="f_tname" maxlength="200" value="${esc(f.tname)}">
-        <label for="f_taddr">${L('ที่อยู่', 'Address')}</label><textarea id="f_taddr" maxlength="400" placeholder="${L('ที่อยู่ตามที่จะให้ระบุในใบกำกับภาษี', 'Address to show on the tax invoice')}">${esc(f.taddr)}</textarea>
-        <div class="two"><div><label for="f_tid">${L('เลขผู้เสียภาษี', 'Tax ID')}</label><input type="text" id="f_tid" inputmode="numeric" maxlength="13" placeholder="${L('13 หลัก', '13 digits')}" value="${esc(f.tid)}"></div>
-          <div><label for="f_tbranch">${L('สาขา', 'Branch')}</label><input type="text" id="f_tbranch" maxlength="60" placeholder="${L('สำนักงานใหญ่', 'Head office')}" value="${esc(f.tbranch)}"></div></div></div>` : ''}
+        <label for="f_tname">${L('ชื่อบุคคล / นิติบุคคล', 'Name (person or company)')}</label><input type="text" id="f_tname" maxlength="200" value="${esc(f.tname)}" class="${state.errField === 'tname' ? 'bad' : ''}">${fieldErr('tname')}
+        <label for="f_taddr">${L('ที่อยู่', 'Address')}</label><textarea id="f_taddr" maxlength="400" placeholder="${L('ที่อยู่ตามที่จะให้ระบุในใบกำกับภาษี', 'Address to show on the tax invoice')}" class="${state.errField === 'taddr' ? 'bad' : ''}">${esc(f.taddr)}</textarea>${fieldErr('taddr')}
+        <div class="two"><div><label for="f_tid">${L('เลขผู้เสียภาษี', 'Tax ID')}</label><input type="text" id="f_tid" inputmode="numeric" maxlength="20" autocomplete="off" placeholder="${L('13 หลัก', '13 digits')}" value="${esc(f.tid)}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,13)" class="${state.errField === 'tid' ? 'bad' : ''}"></div>
+          <div><label for="f_tbranch">${L('สาขา', 'Branch')}</label><input type="text" id="f_tbranch" maxlength="60" placeholder="${L('สำนักงานใหญ่', 'Head office')}" value="${esc(f.tbranch)}"></div></div>
+        ${fieldErr('tid')}
+        <label for="f_temail">${L('อีเมลรับใบกำกับภาษี', 'Email for the tax invoice')}</label><input type="email" id="f_temail" maxlength="120" autocomplete="email" inputmode="email" placeholder="name@company.com" value="${esc(f.temail || '')}" class="${state.errField === 'temail' ? 'bad' : ''}">
+        ${fieldErr('temail')}
+        <p class="note" style="margin:6px 0 0">${L('พนักงานจะตรวจข้อมูล ออกใบกำกับภาษีเต็มรูป แล้วส่งเป็นไฟล์ PDF ไปที่อีเมลนี้', 'Our staff will check your details, issue the full tax invoice and send it as a PDF to this email')}</p></div>` : ''}
     </section>
-    <div class="c-foot">${state.err ? `<div class="err">${esc(state.err)}</div>` : ''}
+    <div class="c-foot">${state.err && !state.errField ? `<div class="err">${esc(state.err)}</div>` : ''}
     <p class="secure">${svg(I.lock, 15)}${L('ชำระเงินผ่าน ChillPay อย่างปลอดภัย ร้านไม่เห็นข้อมูลบัตรหรือบัญชีของคุณ', 'Secure payment via ChillPay. We never see your card or bank details.')}</p>
     ${sellerFoot()}
     <p class="helpln"><button onclick="openHelp()">${L('มีปัญหาในการสั่งซื้อหรือชำระเงิน? แจ้งเรา', 'Problem with your order or payment? Let us know')}</button></p></div></main>`;
@@ -710,24 +724,37 @@ function removeCoupon(){ saveForm(); state.coupon = null; state.cpErr = ''; LS.s
 function saveForm(){
   const f = state.form;
   const ci = $('cp_in'); if (ci) state.cpIn = ci.value;
-  ['name','company','phone','tname','taddr','tid','tbranch'].forEach(k => { const el = $('f_'+k); if (el) f[k] = el.value.trim(); });
+  ['name','company','phone','tname','taddr','tid','tbranch','temail'].forEach(k => { const el = $('f_'+k); if (el) f[k] = el.value.trim(); });
   const t = $('f_tax'); if (t) f.tax = t.checked;
-  LS.set('form', {name:f.name, company:f.company, phone:f.phone, tax:false, tname:'', taddr:'', tid:'', tbranch:''}); // ไม่จำข้อมูลภาษีไว้ในเครื่อง
+  LS.set('form', {name:f.name, company:f.company, phone:f.phone, tax:false, tname:'', taddr:'', tid:'', tbranch:'', temail:''}); // ไม่จำข้อมูลภาษีไว้ในเครื่อง
 }
 function toggleTax(){ saveForm(); const f = state.form; if (f.tax && !f.tname) f.tname = f.company || f.name; render(); }
-function fail(msg){ state.err = msg; state.busy = false; render(); }
+function fail(msg, field){
+  state.err = msg; state.errField = field || ''; state.busy = false; render();
+  const el = field && $('f_' + field);
+  if (el) { el.scrollIntoView({block:'center'}); try { el.focus({preventScroll:true}); } catch(e){} }
+}
+const fieldErr = k => state.err && state.errField === k ? `<p class="ferr" role="alert">${esc(state.err)}</p>` : '';
+/** เลขผู้เสียภาษี 13 หลัก ตรวจหลักสุดท้าย (เหมือนฝั่งเซิร์ฟเวอร์) */
+function thaiIdValid(id){ let s = 0; for (let i = 0; i < 12; i++) s += Number(id[i]) * (13 - i); return (11 - (s % 11)) % 10 === Number(id[12]); }
 
 function toPay(){
   if (state.busy) return;
   saveForm(); const f = state.form;
-  if (!f.name && !f.company) return fail(L('กรุณากรอกชื่อผู้จ่ายหรือชื่อบริษัท อย่างน้อยหนึ่งช่อง', 'Please enter your name or company name'));
+  f.tid = String(f.tid || '').replace(/\D/g, '');
+  if (!f.name && !f.company) return fail(L('กรุณากรอกชื่อผู้จ่ายหรือชื่อบริษัท อย่างน้อยหนึ่งช่อง', 'Please enter your name or company name'), 'name');
   if (f.tax){
-    if (!f.tname || !f.taddr) return fail(L('กรุณากรอกชื่อและที่อยู่สำหรับใบกำกับภาษี', 'Please enter the name and address for the tax invoice'));
-    if (!/^\d{13}$/.test(f.tid)) return fail(L('เลขประจำตัวผู้เสียภาษีต้องเป็นตัวเลข 13 หลัก', 'Tax ID must be 13 digits'));
+    if (!f.tname) return fail(L('กรุณากรอกชื่อสำหรับใบกำกับภาษี', 'Please enter the name for the tax invoice'), 'tname');
+    if (!f.taddr) return fail(L('กรุณากรอกที่อยู่สำหรับใบกำกับภาษี', 'Please enter the address for the tax invoice'), 'taddr');
+    if (!/^\d{13}$/.test(f.tid)) return fail(L('เลขประจำตัวผู้เสียภาษีต้องเป็นตัวเลข 13 หลัก', 'Tax ID must be 13 digits'), 'tid');
+    if (!thaiIdValid(f.tid)) return fail(L('เลขประจำตัวผู้เสียภาษีไม่ถูกต้อง กรุณาตรวจอีกครั้ง', 'Invalid tax ID, please check again'), 'tid');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.temail || '')) return fail(L('กรุณากรอกอีเมลสำหรับรับใบกำกับภาษี', 'Please enter an email for the tax invoice'), 'temail');
   }
+  state.errField = '';
   // เปิดแท็บใหม่ทันทีตอนกด (ถ้าเปิดหลังรอเซิร์ฟเวอร์ เบราว์เซอร์จะบล็อก) หน้านี้ค้างไว้รอผลการจ่าย
   let w = null;
-  try { w = window.open('', '_blank'); if (w) w.document.write('<meta name="viewport" content="width=device-width"><p style="font-family:sans-serif;padding:24px">' + L('กำลังเปิดหน้าชำระเงิน…', 'Opening payment page…') + '</p>'); } catch(e){}
+  try { w = window.open('', '_blank'); if (w) w.document.write('<meta name="viewport" content="width=device-width"><p style="font-family:sans-serif;padding:24px;line-height:1.6">' + L('กำลังเปิดหน้าชำระเงิน…<br><br>จ่ายเสร็จแล้ว กลับไปที่แท็บ <b>Scan &amp; Shop</b> เพื่อดูผลและรับใบเสร็จ', 'Opening payment page…<br><br>After paying, go back to the <b>Scan &amp; Shop</b> tab to see the result and get your receipt') + '</p>'); } catch(e){}
+  state.popupBlocked = !w;
   state.busy = true; state.err = ''; render();
   const cart = Object.keys(state.cart).map(id => ({id, qty: state.cart[id]}));
   call('createOrder', cart, {...f, coupon: state.coupon ? state.coupon.code : '', lang: state.lang}).then(o => {
@@ -735,7 +762,7 @@ function toPay(){
     state.order = {no:o.no, key:o.key}; state.info = o; LS.set('order', state.order);
     if (w) { try { w.location.href = o.paymentUrl; } catch(e){ w = null; } }
     go('wait'); poll();
-  }).catch(e => { if (w) try { w.close(); } catch(_){}; fail(e.message); });
+  }).catch(e => { if (w) try { w.close(); } catch(_){}; fail(e.message, /ผู้เสียภาษี|Tax ID/i.test(e.message) ? 'tid' : (f.tax && /อีเมล|email/i.test(e.message)) ? 'temail' : ''); });
 }
 
 // ---------------------------------------------------------------- รอผลการจ่าย
@@ -759,17 +786,43 @@ function applyStatus(){
 
 function waitView(){
   const o = state.info;
-  const main = `<main class="narrow"><div class="langrow">${langSeg('sm')}</div><h2>${L('ชำระเงินออเดอร์', 'Pay for order')} ${esc(o.no)}</h2><div class="due"><span>${L('ยอดที่ต้องชำระ', 'Amount due')}</span><b>${baht(o.total)}</b></div>
+  const exp = o.expires ? Number(new Date(o.expires)) : 0;
+  const expired = exp && Date.now() > exp;
+  const minsLeft = exp ? Math.max(0, Math.ceil((exp - Date.now()) / 60000)) : 0;
+  const until = o.expires ? thTime(o.expires).split(' ').pop() : '';
+  const head = `<div class="langrow">${langSeg('sm')}</div><h2>${L('ชำระเงินออเดอร์', 'Pay for order')} ${esc(o.no)}</h2><div class="due"><span>${L('ยอดที่ต้องชำระ', 'Amount due')}</span><b>${baht(o.total)}</b></div>`;
+  const help = `<p class="helpln"><button onclick="openHelp('paid_not_done')">${L('จ่ายเงินแล้วแต่หน้านี้ไม่เปลี่ยน? แจ้งเรา', 'Paid but this page has not changed? Let us know')}</button></p>`;
+  if (expired) {
+    const main = `<main class="narrow">${head}
+      <div class="sim"><div class="tick x" style="margin:0 auto 10px">!</div><h3>${L('ลิงก์ชำระเงินหมดอายุแล้ว', 'The payment link has expired')}</h3>
+        <p>${L('ถ้ายังไม่ได้จ่าย กด "สร้างลิงก์ใหม่" สินค้ายังอยู่ในตะกร้า ถ้าจ่ายไปแล้วช่วงท้าย กด "ตรวจสถานะ" ระบบยังตรวจให้อยู่', 'If you have not paid, tap "New payment link"; your items stay in the cart. If you paid just before it expired, tap "Check status"; we are still checking.')}</p></div>
+      <button class="btn ghost c" onclick="poll()">${L('ตรวจสถานะการชำระเงิน', 'Check payment status')}</button>
+      ${help}</main>`;
+    return {main, bar:`<button class="btn c" onclick="renewOrder()">${L('สร้างลิงก์ใหม่', 'New payment link')}</button>`};
+  }
+  const main = `<main class="narrow">${head}
+    ${state.popupBlocked ? `<div class="notice"><b>${L('หน้าชำระเงินยังไม่เปิด', 'The payment page did not open')}</b>${L('กดปุ่ม "ไปหน้าชำระเงิน" ด้านล่างเพื่อจ่ายเงิน', 'Tap "Go to payment" below to pay')}</div>` : ''}
     <div class="sim"><div class="spin"></div><h3>${L('รอการชำระเงิน', 'Waiting for payment')}</h3>
-      <p>${L('ชำระเงินในหน้าของ ChillPay ที่เปิดขึ้นมา แล้วกลับมาที่หน้านี้ ระบบจะแสดงผลเองเมื่อได้รับเงิน', 'Pay on the ChillPay page that opened, then come back here. This page updates automatically once payment is received.')}</p>
+      <p>${L('ชำระเงินในหน้าของ ChillPay แล้วกลับมาที่หน้านี้ ระบบจะแสดงผลเองเมื่อได้รับเงิน', 'Pay on the ChillPay page, then come back here. This page updates automatically once payment is received.')}</p>
+      <div class="backtab"><b>${L('จ่ายเสร็จแล้ว กลับมาที่แท็บ Scan & Shop นี้', 'After paying, come back to this Scan & Shop tab')}</b><br>${L('ถ้าหาแท็บไม่เจอ เปิดลิงก์ร้านหรือสแกน QR อีกครั้งในเบราว์เซอร์เดิม ระบบจำออเดอร์นี้ไว้ให้', 'If you cannot find it, open the shop link or scan the QR again in the same browser. We remember this order.')}</div>
       <ul class="tips"><li>${L('ใช้มือถือเครื่องนี้: เลือก Mobile Banking หรือ E-wallet ระบบจะเด้งเข้าแอปให้', 'On this phone: choose Mobile Banking or an e-wallet and it will open the app for you')}</li>
         <li>${L('PromptPay QR: ต้องบันทึกภาพ QR แล้วเปิดในแอปธนาคาร', 'PromptPay QR: save the QR image, then open it in your banking app')}</li>
-        ${o.expires ? `<li>${L('ลิงก์ชำระเงินใช้ได้ถึง ' + thTime(o.expires).split(' ').pop() + ' น.', 'The payment link is valid until ' + thTime(o.expires).split(' ').pop())}</li>` : ''}</ul></div>
+        ${exp ? `<li>${L(`ลิงก์ชำระเงินใช้ได้อีกประมาณ ${minsLeft} นาที (ถึง ${until} น.)`, `The payment link is valid for about ${minsLeft} more min (until ${until})`)}</li>` : ''}</ul></div>
     <a class="btn ghost c" href="${esc(o.paymentUrl)}" target="_blank" rel="noopener">${L('เปิดหน้าชำระเงินอีกครั้ง', 'Open payment page again')}</a>
     <button class="btn ghost c" onclick="poll()">${L('ตรวจสถานะการชำระเงิน', 'Check payment status')}</button>
     <button class="btn ghost c" onclick="cancelOrder()">${L('ยกเลิกและกลับไปแก้ตะกร้า', 'Cancel and edit cart')}</button>
-    <p class="helpln"><button onclick="openHelp('paid_not_done')">${L('จ่ายเงินแล้วแต่หน้านี้ไม่เปลี่ยน? แจ้งเรา', 'Paid but this page has not changed? Let us know')}</button></p></main>`;
+    ${help}</main>`;
   return {main, bar:`<a class="btn" href="${esc(o.paymentUrl)}" target="_blank" rel="noopener"><span>${L('ไปหน้าชำระเงิน', 'Go to payment')}</span><span>${baht(o.total)}</span></a>`};
+}
+
+/** ลิงก์หมดอายุ: ปิดออเดอร์เดิม (ถ้าจ่ายแล้วจะได้สถานะ PAID แทน) แล้วกลับไปตะกร้าเพื่อสร้างลิงก์ใหม่ */
+function renewOrder(){
+  clearTimeout(timer);
+  call('cancelOrder', state.order.no, state.order.key).then(o => {
+    state.info = o;
+    if (o.status === 'PAID') return applyStatus();
+    state.order = null; LS.set('order', null); go('cart');
+  }).catch(e => { state.err = e.message; poll(); });
 }
 
 function cancelOrder(){
@@ -790,7 +843,7 @@ function doneView(){
   const main = `<main class="narrow"><div class="langrow">${langSeg('sm')}</div><div class="ticket"><div class="tick">✓</div><b>${L('ชำระเงินสำเร็จ', 'Payment complete')}</b>
     <div class="ono">${esc(o.no)}</div><p class="note" style="margin:0">${esc(L(SHOP.pickupMsg, SHOP.pickupMsgEn || 'Show this page to our staff to collect your items'))}</p>
     ${summary(withImg(o.items), o)}
-    <p class="note">${o.channel ? L('ช่องทาง: ', 'Paid with: ')+esc(o.channel)+' · ' : ''}${o.paidAt ? L('เวลา ', 'at ')+thTime(o.paidAt) : ''}${o.tax ? L(' · ขอใบกำกับภาษี', ' · Tax invoice requested') : ''}</p></div>${rcCard(o)}<p class="helpln"><button onclick="openHelp()">${L('มีปัญหาในการสั่งซื้อหรือชำระเงิน? แจ้งเรา', 'Problem with your order or payment? Let us know')}</button></p></main>`;
+    <p class="note">${o.channel ? L('ช่องทาง: ', 'Paid with: ')+esc(o.channel)+' · ' : ''}${o.paidAt ? L('เวลา ', 'at ')+thTime(o.paidAt) : ''}</p>${o.tax ? `<p class="note" style="margin-top:4px">${o.taxEmail ? L('ใบกำกับภาษีเต็มรูปจะส่งไปที่ ', 'Your full tax invoice will be sent to ') + esc(o.taxEmail) : L('ขอใบกำกับภาษีเต็มรูปแล้ว พนักงานจะออกให้หลังตรวจข้อมูล', 'Full tax invoice requested. Our staff will issue it after checking your details')}</p>` : ''}</div>${rcCard(o)}<p class="helpln"><button onclick="openHelp()">${L('มีปัญหาในการสั่งซื้อหรือชำระเงิน? แจ้งเรา', 'Problem with your order or payment? Let us know')}</button></p></main>`;
   return {main, bar:`<button class="btn c" onclick="again()">${L('สั่งซื้อรายการใหม่', 'Start a new order')}</button>`};
 }
 
