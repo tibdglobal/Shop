@@ -229,6 +229,8 @@
   .lastord{text-align:center;margin:10px 0 0}
   .lastord button{border:0;background:none;color:var(--mint-deep);font-size:14px;text-decoration:underline;cursor:pointer;padding:10px 8px;min-height:44px}
   .sheet:focus,.drawer:focus{outline:none}
+  .polbtn{border:0;background:none;color:var(--mint-deep);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:10px 6px;min-height:44px}
+  .pol{margin:4px 0 0;padding-left:20px;line-height:1.6;font-size:14.5px;color:var(--ink2)} .pol li{margin:0 0 8px}
   .seller{margin:14px auto 0;max-width:520px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.6;display:flex;flex-direction:column;gap:1px}
   .seller b{color:var(--ink2);font-weight:600;font-size:13px}
   .slabel{display:inline-block;align-self:flex-start;margin-top:4px;background:var(--coral-soft);color:var(--coral-dk);font-size:12px;font-weight:600;border-radius:6px;padding:2px 7px;line-height:1.4}
@@ -482,7 +484,16 @@ function sellerFoot(){
   return `<div class="seller"><b>${L('จำหน่ายโดย', 'Sold by')} ${esc(s.name)}</b>
     ${s.tid ? `<span>${L('เลขประจำตัวผู้เสียภาษี', 'Tax ID')} ${esc(s.tid)}${s.branch ? ' · ' + esc(s.branch) : ''}</span>` : ''}
     ${s.addr ? `<span>${esc(s.addr)}</span>` : ''}
-    ${contact ? `<span>${L('ติดต่อ', 'Contact')} ${esc(contact)}</span>` : ''}</div>`;
+    ${contact ? `<span>${L('ติดต่อ', 'Contact')} ${esc(contact)}</span>` : ''}
+    ${SHOP.policy ? `<button class="polbtn" onclick="state.policy=true;render()">${L('นโยบายการเปลี่ยนและคืนสินค้า', 'Exchange & refund policy')}</button>` : ''}</div>`;
+}
+function policyView(){
+  const t = state.lang === 'en' && SHOP.policyEn ? SHOP.policyEn : SHOP.policy;
+  const lines = String(t || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  return `<div class="ov" onclick="if(event.target===this){state.policy=false;render()}"><div class="sheet help" role="dialog" aria-label="${L('นโยบายการเปลี่ยนและคืนสินค้า', 'Exchange & refund policy')}">
+    <div class="hh"><b>${L('การเปลี่ยนและคืนสินค้า', 'Exchanges & refunds')}</b><button class="x" onclick="state.policy=false;render()" aria-label="${L('ปิด', 'Close')}">${svg(I.x)}</button></div>
+    <div class="in"><ul class="pol">${lines.map(l => `<li>${esc(l.replace(/^[•\-]\s*/, ''))}</li>`).join('')}</ul>
+      <button class="btn c" style="margin-top:14px" onclick="state.policy=false;render()">${L('ปิด', 'Close')}</button></div></div></div>`;
 }
 
 function call(fn, ...args){
@@ -550,13 +561,14 @@ function render(){
   $('app').innerHTML = v.main;
   $('bar').innerHTML = v.bar ? '<div>'+v.bar+'</div>' : '';
   const hadOv = !!$('ov').innerHTML;
-  $('ov').innerHTML = state.ask ? askView() : state.help ? helpView() : state.rcOpen && state.rc && state.step === 'done' ? rcView() : state.detail ? detailView(PRODUCTS.find(p => p.id === state.detail)) : state.drawer && state.step === 'catalog' ? drawerView() : '';
+  $('ov').innerHTML = state.ask ? askView() : state.policy ? policyView() : state.help ? helpView() : state.rcOpen && state.rc && state.step === 'done' ? rcView() : state.detail ? detailView(PRODUCTS.find(p => p.id === state.detail)) : state.drawer && state.step === 'catalog' ? drawerView() : '';
   const dlg = $('ov').querySelector('.sheet,.drawer');
   if (dlg && !hadOv) { if (!dlg.hasAttribute('tabindex')) dlg.setAttribute('tabindex', '-1'); try { dlg.focus({preventScroll:true}); } catch(e){} }
 }
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (state.ask) askDone(false);
+  else if (state.policy) { state.policy = false; render(); }
   else if (state.help) { state.help = null; render(); }
   else if (state.rcOpen) closeRc();
   else if (state.detail) show(null);
