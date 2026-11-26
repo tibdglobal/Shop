@@ -1,0 +1,1395 @@
+<!doctype html>
+<html lang="th">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>หลังร้าน · Scan &amp; Shop by TIBD</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f6f5f0">
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f3ee; --surface:#ffffff; --sunk:#f8f7f2; --ink:#14233b; --ink2:#33415a; --muted:#6b778c; --line:#e7e5dd; --line2:#d9d6cc;
+    --coral:#e8572f; --coral-dk:#cc4520; --coral-soft:#fde9e2; --mint:#6fd6b6; --mint-deep:#1b8a6b; --mint-soft:#e4f6ef;
+    --sky-soft:#e3f1fa; --sky-deep:#1f6f99; --warn:#8a5a00; --warn-bg:#fff3d6; --bad:#b42318; --bad-bg:#fdecea;
+    --r:14px; --shadow:0 1px 2px rgba(20,35,59,.05),0 6px 18px -10px rgba(20,35,59,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Prompt","Noto Sans Thai","Leelawadee UI",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.5}
+  button{font:inherit;color:inherit}
+  a{color:inherit}
+  svg{flex:none;display:block}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ---------- โครงหน้า ---------- */
+  .banner{background:var(--warn-bg);color:var(--warn);font-size:12.5px;padding:6px 16px;text-align:center}
+  .shell{display:flex;min-height:100vh}
+  .side{width:236px;flex:none;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+  .logo{display:flex;align-items:center;gap:10px;padding:20px 18px 16px}
+  .logo i{width:34px;height:34px;border-radius:10px;background:var(--coral);color:#fff;display:grid;place-items:center;font-style:normal}
+  .logo b{display:block;font-size:17px;line-height:1.1} .logo span{font-size:12px;color:var(--muted)}
+  .nav{display:flex;flex-direction:column;gap:2px;padding:6px 10px;flex:1;overflow:auto}
+  .nav button{display:flex;align-items:center;gap:11px;border:0;background:none;border-radius:10px;padding:9px 12px;font-size:14.5px;color:var(--ink2);cursor:pointer;text-align:left;width:100%}
+  .nav button:hover{background:var(--sunk)}
+  .nav button.on{background:var(--mint-soft);color:var(--mint-deep);font-weight:600}
+  .nav .sep{height:1px;background:var(--line);margin:8px 6px}
+  .badge{margin-left:auto;background:var(--coral);color:#fff;border-radius:999px;min-width:20px;height:20px;padding:0 6px;font-size:11.5px;font-weight:600;display:inline-grid;place-items:center}
+  .me{border-top:1px solid var(--line);padding:12px 14px;display:flex;align-items:center;gap:10px}
+  .ava{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:600;font-size:14px;flex:none}
+  .me .who{flex:1;min-width:0} .me .who b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .me .who span{font-size:12px;color:var(--muted)}
+  .content{flex:1;min-width:0;display:flex;flex-direction:column}
+  main{padding:22px 28px 40px;max-width:1180px;width:100%}
+  .topbar{display:none}
+  .tabbar{display:none}
+
+  /* ---------- ส่วนหัวของแต่ละหน้า ---------- */
+  .ph{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .ph h1{margin:0;font-size:24px;line-height:1.2;font-weight:700}
+  .ph p{margin:3px 0 0;color:var(--muted);font-size:13.5px}
+  .ph .acts{display:flex;gap:8px;flex-wrap:wrap}
+  h2{font-size:16px;margin:22px 0 10px;font-weight:600}
+  .note{font-size:12.5px;color:var(--muted)}
+  .err{color:var(--bad);font-size:13.5px;margin:10px 0;background:var(--bad-bg);border-radius:10px;padding:9px 12px}
+  .empty{background:var(--surface);border:1px dashed var(--line2);border-radius:var(--r);padding:28px 16px;text-align:center;color:var(--muted)}
+
+  /* ---------- ปุ่ม ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:10px;background:var(--coral);color:#fff;font-weight:600;font-size:14.5px;padding:9px 16px;cursor:pointer;text-decoration:none;white-space:nowrap}
+  .btn:hover{background:var(--coral-dk)}
+  .btn.sec{background:var(--surface);color:var(--ink);border-color:var(--line2);font-weight:500} .btn.sec:hover{background:var(--sunk)}
+  .btn.ghost{background:none;color:var(--ink2);font-weight:500} .btn.ghost:hover{background:var(--sunk)}
+  .btn.ok{background:var(--mint-deep)} .btn.ok:hover{background:#156f56}
+  .btn.danger{background:var(--surface);color:var(--bad);border-color:#f1c4bf;font-weight:500} .btn.danger:hover{background:var(--bad-bg)}
+  .btn.sm{padding:5px 11px;font-size:13px;border-radius:8px}
+  .btn.block{width:100%;padding:12px 16px;font-size:15.5px}
+  .btn:disabled{opacity:.55;cursor:wait}
+  .icon-btn{border:0;background:none;border-radius:8px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+  .icon-btn:hover{background:var(--sunk);color:var(--ink)}
+  .rcl{margin-bottom:6px}.rcl .lk{display:inline-flex;align-items:center;gap:4px}.rcl .note{display:block}
+  .lk{border:0;background:none;color:var(--mint-deep);padding:0;font-size:13px;cursor:pointer;white-space:nowrap;font-weight:500}
+  .lk:hover{text-decoration:underline}
+
+  /* ---------- ตัวกรอง ---------- */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;flex-wrap:wrap;gap:2px}
+  .seg button{border:0;background:none;color:var(--muted);border-radius:7px;padding:6px 12px;font-size:13.5px;cursor:pointer}
+  .seg button.on{background:var(--ink);color:#fff}
+  .search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 12px;flex:1;min-width:200px;max-width:340px;color:var(--muted)}
+  .search input{border:0 !important;outline:0 !important;padding:9px 0 !important;background:none !important;flex:1;min-width:0}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{border:1px solid var(--line2);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--ink2)}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip .c{opacity:.7;margin-left:4px}
+
+  /* ---------- การ์ดตัวเลข ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+  .stat{background:var(--surface);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:flex-start}
+  .stat .si{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none}
+  .stat .si.c{background:var(--coral-soft);color:var(--coral)} .stat .si.m{background:var(--mint-soft);color:var(--mint-deep)}
+  .stat .si.s{background:var(--sky-soft);color:var(--sky-deep)} .stat .si.w{background:var(--warn-bg);color:var(--warn)}
+  .stat span{display:block;font-size:12.5px;color:var(--muted)}
+  .stat b{display:block;font-size:21px;line-height:1.25;font-variant-numeric:tabular-nums;font-weight:700}
+  .stat small{font-size:12px;color:var(--muted)}
+  .card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:12px}
+  .card h3{margin:0 0 12px;font-size:15px;font-weight:600}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+
+  /* ---------- ป้ายสถานะ ---------- */
+  .pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:500;background:#eeece6;color:var(--muted);white-space:nowrap}
+  .pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.8}
+  .pill.PAID,.pill.ok{background:var(--mint-soft);color:var(--mint-deep)}
+  .pill.PENDING,.pill.wait{background:var(--warn-bg);color:var(--warn)}
+  .pill.REVIEW,.pill.FAILED,.pill.bad{background:var(--bad-bg);color:var(--bad)}
+  .pill.info{background:var(--sky-soft);color:var(--sky-deep)}
+
+  /* ---------- รายการออเดอร์ ---------- */
+  .list{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+  .lhead,.orow{display:grid;grid-template-columns:150px minmax(150px,1.1fr) minmax(170px,1.4fr) 120px 150px 170px;gap:14px;align-items:start;padding:12px 18px}
+  .lhead{font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line);background:var(--sunk);padding-top:9px;padding-bottom:9px}
+  .orow{border-bottom:1px solid var(--line);font-size:13.5px}
+  .orow:last-child{border-bottom:0}
+  .orow:hover{background:#fcfbf8}
+  .orow .no b{display:block;font-size:14px}
+  .orow .items{color:var(--ink2)}
+  .orow .amt{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+  .orow .acts{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+  .lab{display:none}
+  .more{padding:10px 18px;font-size:12.5px;color:var(--muted);background:var(--sunk)}
+
+  /* ---------- สินค้า / แบรนด์ ---------- */
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+  .pcard{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+  .pcard.off{opacity:.62}
+  .pcard .img{aspect-ratio:4/3;background:#fff;border-bottom:1px solid var(--line);display:grid;place-items:center;position:relative}
+  .pcard .img img{position:absolute;inset:10px;width:calc(100% - 20px);height:calc(100% - 20px);object-fit:contain}
+  .pcard .img .tagb{position:absolute;left:10px;top:10px;z-index:1}
+  .pcard .bd{padding:12px 14px 14px;display:flex;flex-direction:column;gap:2px;flex:1}
+  .pcard .bd b{font-size:14.5px;line-height:1.3}
+  .pcard .bd .sub{font-size:12.5px;color:var(--muted)}
+  .pcard .ft{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px;gap:8px}
+  .pcard .price{font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}
+  .noimg{display:grid;place-items:center;text-align:center;font-size:12px;color:var(--muted);background:repeating-linear-gradient(45deg,#faf9f5,#faf9f5 8px,#f3f2ec 8px,#f3f2ec 16px);width:100%;height:100%}
+  .bcard .img{aspect-ratio:16/7}
+  .bcard .img img{inset:0;width:100%;height:100%;object-fit:cover}
+  /* สวิตช์ */
+  .tg{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--ink2);user-select:none}
+  .tg input{position:absolute;opacity:0;width:0;height:0}
+  .tg i{width:38px;height:22px;border-radius:999px;background:#d3d0c6;position:relative;transition:background .15s;flex:none}
+  .tg i:after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .15s}
+  .tg input:checked + i{background:var(--mint-deep)} .tg input:checked + i:after{transform:translateX(16px)}
+  .tg input:focus-visible + i{outline:2px solid var(--mint);outline-offset:2px}
+  .tg input:disabled + i{opacity:.5}
+
+  /* ---------- แถวทั่วไป (ประวัติ พนักงาน) ---------- */
+  .cpcode{display:block;font-family:ui-monospace,Consolas,monospace;letter-spacing:.5px;font-size:15.5px}
+  .row .main > span{display:block} .row .main > span:not(.note){font-size:13.5px}
+  .seg{display:flex;gap:8px}.seg label{flex:1;margin:0}.seg input{position:absolute;opacity:0;pointer-events:none}
+  .seg span{display:block;text-align:center;border:1.5px solid var(--line);border-radius:10px;padding:9px;cursor:pointer;font-weight:500;font-size:14px}
+  .seg input:checked + span{border-color:var(--mint-deep);background:var(--mint-soft);color:var(--mint-deep)}
+  .seg input:focus-visible + span{outline:2px solid var(--mint);outline-offset:2px}
+  .salep{color:var(--coral)} .salep s{color:var(--muted);font-weight:400;font-size:13px;margin-right:4px}
+  .pill.sale{background:var(--coral-soft);color:var(--coral)}
+  .row.off{opacity:.62}
+  .enbox summary{cursor:pointer;list-style:revert} .enbox[open] summary{margin-bottom:4px}
+  .rpt table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px} .rpt th,.rpt td{border:1px solid #ccc;padding:5px 6px;text-align:left}
+  .rpt td:nth-child(n+6),.rpt th:nth-child(n+6){text-align:right} .rpt tr.g td{font-weight:700;background:#f4f4f4}
+  .bacts{display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .bcard .bd .note{overflow-wrap:anywhere}
+  .bcard .bft{flex-direction:column;align-items:stretch;gap:10px}
+  .bcard .bft .bacts{display:flex;justify-content:stretch}
+  .bcard .bft .bacts .btn{flex:1 1 auto;justify-content:center;white-space:nowrap}
+  .prow{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:4px 0;border-bottom:1px solid var(--line)} .prow s{color:var(--muted);font-size:12.5px}
+  .rows{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+  .row{display:flex;gap:12px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:0}
+  .row .main{flex:1;min-width:0} .row .main b{font-weight:600} .row .main .note{display:block}
+  .row .side-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .dot{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--sunk);color:var(--muted)}
+  .dot.c{background:var(--coral-soft);color:var(--coral)} .dot.m{background:var(--mint-soft);color:var(--mint-deep)} .dot.s{background:var(--sky-soft);color:var(--sky-deep)} .dot.b{background:var(--bad-bg);color:var(--bad)}
+
+  /* ---------- กราฟ ---------- */
+  .chart{display:flex;gap:8px;padding:6px 4px 26px 0}
+  .yax{display:flex;flex-direction:column;justify-content:space-between;height:190px;font-size:11px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+  .plot{flex:1;height:190px;display:flex;align-items:flex-end;gap:4px;border-bottom:1px solid var(--line2);
+    background:linear-gradient(var(--line),var(--line)) 0 0/100% 1px no-repeat,linear-gradient(var(--line),var(--line)) 0 50%/100% 1px no-repeat}
+  .col{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;position:relative;outline:0}
+  .col .cb{width:100%;max-width:30px;background:var(--mint-deep);border-radius:5px 5px 0 0;min-height:1px}
+  .col:hover .cb,.col:focus .cb{background:var(--ink)}
+  .col .xl{position:absolute;top:100%;margin-top:6px;font-size:10.5px;color:var(--muted);white-space:nowrap}
+  .col .tip{display:none;position:absolute;bottom:55%;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:10px;padding:7px 10px;font-size:12px;white-space:nowrap;z-index:3;pointer-events:none;line-height:1.45}
+  .col .tip b{display:block;font-weight:600}
+  .col:first-child .tip{left:0;transform:none} .col:last-child .tip{left:auto;right:0;transform:none}
+  .col:hover .tip,.col:focus .tip{display:block}
+  table.t{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+  table.t th,table.t td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}
+  table.t tr:last-child td{border-bottom:0}
+  table.t th{color:var(--muted);font-weight:500;font-size:12.5px} table.t th:first-child,table.t td:first-child{text-align:left}
+  .hb{height:6px;border-radius:999px;background:var(--mint);margin-top:5px;min-width:3px}
+
+  /* ---------- ฟอร์ม ---------- */
+  label{display:block;font-size:13px;color:var(--ink2);margin:12px 0 4px;font-weight:500}
+  label .note{font-weight:400}
+  input[type=text],input[type=password],input[type=date],textarea,select{width:100%;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font:inherit;color:var(--ink);background:#fff}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--mint);outline-offset:0;border-color:var(--mint)}
+  input:disabled{background:var(--sunk);color:var(--muted)}
+  textarea{min-height:70px;resize:vertical}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+  .upl{display:flex;gap:12px;align-items:center}
+  .upl .pv{width:84px;height:84px;border-radius:12px;border:1px solid var(--line);overflow:hidden;background:#fff;flex:none;display:grid;place-items:center}
+  .upl .pv img{width:100%;height:100%;object-fit:contain}
+  .upl .pv.wide{width:150px;height:70px} .upl .pv.wide img{object-fit:cover}
+  .file{position:relative;overflow:hidden} .file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .urg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .urg button{border:1.5px solid var(--line2);background:var(--surface);border-radius:12px;padding:9px 10px;text-align:left;cursor:pointer}
+  .urg button b{display:block;font-size:14px} .urg button span{display:block;font-size:11.5px;color:var(--muted);line-height:1.3}
+  .urg button.on.urgent{border-color:var(--bad);background:var(--bad-bg)} .urg button.on.urgent b{color:var(--bad)}
+  .urg button.on.normal{border-color:var(--warn);background:var(--warn-bg)} .urg button.on.normal b{color:var(--warn)}
+  .urg button.on.idea{border-color:var(--sky-deep);background:var(--sky-soft)} .urg button.on.idea b{color:var(--sky-deep)}
+  .box{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:14px}
+
+  /* ---------- หน้าต่างย่อย ---------- */
+  .ov{position:fixed;inset:0;background:rgba(20,35,59,.42);z-index:20;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:40px 16px}
+  .dlg{background:var(--surface);width:100%;max-width:520px;border-radius:16px;box-shadow:0 20px 50px -20px rgba(20,35,59,.5);display:flex;flex-direction:column}
+  .dlg.sm{max-width:420px} .dlg.wide{max-width:820px}
+  .dlg-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 10px}
+  .dlg-h h3{margin:0;font-size:18px;font-weight:700}
+  .dlg-h p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+  .dlg-b{padding:0 18px 6px}
+  .dlg-f{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:14px 18px;border-top:1px solid var(--line);margin-top:12px}
+  .dlg-f .r{display:flex;gap:8px;margin-left:auto}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;z-index:40;display:flex;gap:8px;align-items:center;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);animation:tin .2s}
+  .toast.bad{background:var(--bad)}
+  @keyframes tin{from{opacity:0;transform:translate(-50%,8px)}}
+  .spin{width:28px;height:28px;border-radius:50%;border:3px solid var(--mint-soft);border-top-color:var(--mint-deep);animation:sp 1s linear infinite;margin:40px auto}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* ---------- หน้าเข้าสู่ระบบ ---------- */
+  .auth{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(ellipse at top,#e8f5ef,transparent 60%),var(--bg)}
+  .auth .box2{width:100%;max-width:380px;background:var(--surface);border-radius:20px;box-shadow:0 20px 50px -24px rgba(20,35,59,.45);padding:26px 24px}
+  .auth .logo{padding:0 0 14px}
+  .auth h2{margin:4px 0 2px;font-size:20px}
+  .auth .row2{display:flex;gap:8px;margin-top:10px}
+  .auth .row2 .btn{flex:1}
+  .chk{display:flex;gap:9px;align-items:flex-start;margin:14px 0 4px;font-size:13px;color:var(--ink2);font-weight:400;cursor:pointer}
+  .chk input{width:18px;height:18px;accent-color:var(--mint-deep);margin-top:2px;flex:none}
+
+  /* ---------- ใบกำกับภาษี (พิมพ์) ---------- */
+  .invbar{display:flex;gap:8px;justify-content:flex-end;padding:14px 18px 10px}
+  .inv{position:relative;border:1px solid var(--line);margin:0 18px 18px;padding:26px 24px;font-size:13px;color:#111;overflow:hidden;background:#fff}
+  .inv.demo:before{content:"ทดสอบ";position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) rotate(-24deg);font-size:110px;font-weight:700;color:rgba(232,87,47,.09);pointer-events:none;white-space:nowrap}
+  .inv .top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .inv h2{margin:0;font-size:20px} .inv h2 small{display:block;font-size:12px;font-weight:400;color:#555}
+  .inv .meta{text-align:right} .inv p{margin:0}
+  .inv .buyer{margin:16px 0 12px;padding:10px 12px;background:#f6f6f3;border-radius:8px}
+  .inv table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .inv th,.inv td{border-bottom:1px solid #ddd;padding:7px 6px;text-align:right}
+  .inv th{background:#f0efea;font-weight:600} .inv th:nth-child(2),.inv td:nth-child(2){text-align:left} .inv th:first-child,.inv td:first-child{text-align:center;width:40px}
+  .inv .sumr{display:flex;justify-content:flex-end;margin-top:10px}
+  .inv .sumr table{width:auto;min-width:290px} .inv .sumr td{border:0;padding:3px 6px;width:auto;white-space:nowrap} .inv .sumr td:first-child{text-align:left;width:auto} .inv .sumr td:nth-child(2){text-align:right} .inv .sumr tr.g td{font-weight:700;font-size:15px;border-top:1px solid #999}
+  .inv .words{margin-top:8px;padding:8px 12px;background:#f6f6f3;border-radius:8px}
+  .inv .sign{display:flex;justify-content:space-between;margin-top:44px;gap:20px;text-align:center}
+  .inv .sign div{flex:1;border-top:1px solid #999;padding-top:6px;color:#555}
+  @media print{ body *{visibility:hidden} .inv,.inv *,.rcdoc,.rcdoc *{visibility:visible} .inv,.rcdoc{position:absolute;left:0;top:0;width:100%;border:0;margin:0} .ov{position:static;background:none} }
+
+  /* ---------- จอเล็ก / มือถือ ---------- */
+  @media (max-width:1100px){
+    .lhead{display:none}
+    .orow{grid-template-columns:1fr auto;gap:6px 12px;padding:14px 16px}
+    .orow .no{grid-column:1} .orow .st{grid-column:2;grid-row:1;justify-self:end}
+    .orow .buyer,.orow .items,.orow .acts{grid-column:1 / -1}
+    .orow .amt{grid-column:1 / -1;text-align:left;font-size:16px}
+    .orow .acts{flex-direction:row;flex-wrap:wrap;align-items:center}
+    .lab{display:inline;color:var(--muted);font-size:12px;margin-right:6px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:860px){
+    .side{display:none}
+    .topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 14px}
+    .topbar .logo{padding:0;flex:1}
+    main{padding:16px 14px 96px}
+    .ph h1{font-size:21px}
+    .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--surface);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+    .tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;color:var(--muted);padding:5px 2px;border-radius:10px;cursor:pointer;position:relative}
+    .tabbar button.on{color:var(--mint-deep);font-weight:600}
+    .tabbar .badge{position:absolute;top:0;left:55%;margin:0;min-width:17px;height:17px;font-size:10.5px}
+    .ov{padding:0;align-items:flex-end}
+    .dlg,.dlg.sm,.dlg.wide{max-width:none;border-radius:18px 18px 0 0;max-height:94vh;overflow:auto}
+    .search{max-width:none;flex-basis:100%}
+    .pgrid{grid-template-columns:repeat(2,1fr);gap:10px}
+    .pcard .bd{padding:10px 11px 12px} .pcard .price{font-size:15.5px}
+    .two{grid-template-columns:1fr}
+    .row{padding:12px 14px;flex-wrap:wrap}
+    .row .side-r{width:100%;justify-content:flex-start;padding-left:46px}
+    .inv{margin:0 10px 12px;padding:18px 14px}
+    .toast{bottom:84px}
+  }
+</style>
+</head>
+<body>
+<div id="note"></div>
+<div id="root"></div>
+<div id="ov"></div>
+<div id="toast"></div>
+
+<script>
+const SHOP_EXEC = "https://script.google.com/macros/s/AKfycbxi9Q5SFflOy3VO8acx9GLnXzew_LQxnmHxD398Dh7YTUSJfk8tMycsDQiOO9XBxt8k/exec";
+(function(){
+  function api(fn, args){
+    return fetch(SHOP_EXEC, { method: 'POST', body: JSON.stringify({ fn: fn, args: args || [] }) })
+      .then(r => { if (!r.ok) throw new Error('เชื่อมต่อระบบไม่สำเร็จ (HTTP ' + r.status + ')'); return r.json(); })
+      .then(j => { if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด'); return j.data; });
+  }
+  function runner(h){
+    return new Proxy({}, { get(_, k){
+      if (k === 'withSuccessHandler') return f => runner(Object.assign({}, h, { ok: f }));
+      if (k === 'withFailureHandler') return f => runner(Object.assign({}, h, { bad: f }));
+      return (...args) => { api(String(k), args).then(d => { if (h.ok) h.ok(d); }, e => { if (h.bad) h.bad(e instanceof Error ? e : new Error(String(e))); }); };
+    } });
+  }
+  window.google = { script: { run: runner({}) } };
+})();
+const BOOT = {"base":"https://script.google.com/macros/s/AKfycbxi9Q5SFflOy3VO8acx9GLnXzew_LQxnmHxD398Dh7YTUSJfk8tMycsDQiOO9XBxt8k/exec","shopName":"Scan & Shop by TIBD","shopUrl":"../"};
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = n => Number(n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const baht = n => num(n) + ' บาท';
+const pad = n => String(n).padStart(2,'0');
+const TM = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const thDate = d => d.getDate()+' '+TM[d.getMonth()]+' '+(d.getFullYear()+543);
+const hm = d => pad(d.getHours())+':'+pad(d.getMinutes());
+const startDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const startWeek = d => { const s = startDay(d); s.setDate(s.getDate() - ((s.getDay()+6)%7)); return s; };
+const startMonth = d => new Date(d.getFullYear(), d.getMonth(), 1);
+const STATUS_TH = {PAID:'ชำระแล้ว', PENDING:'รอชำระ', EXPIRED:'หมดเวลา', CANCELLED:'ยกเลิก', FAILED:'สร้างลิงก์ไม่สำเร็จ', REVIEW:'ต้องตรวจสอบ'};
+const when = ms => ms ? thDate(new Date(ms)) + ' ' + hm(new Date(ms)) : '';
+
+/** ไอคอนเส้น (ขนาด 24) */
+const ICONS = {
+  tag:'<path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.5"/>',
+  orders:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  summary:'<path d="M4 20V11M10 20V5M16 20v-7M21 20H3"/>',
+  products:'<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8M12 13v8"/>',
+  brands:'<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.4"/>',
+  history:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.6a3.5 3.5 0 010 6.8M18.5 14.3c2 .8 3 2.8 3 5.7"/>',
+  bugs:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+  store:'<path d="M3 9l1.6-5h14.8L21 9"/><path d="M4 9v11h16V9M9 20v-6h6v6M3 9c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3"/>',
+  refresh:'<path d="M20 11a8 8 0 10-2.3 5.7M20 4v7h-7"/>',
+  logout:'<path d="M15 4h4v16h-4M10 17l5-5-5-5M15 12H3"/>',
+  key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16.5 6.5l3 3"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>', search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>', edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>', check:'<path d="M5 12l5 5 9-10"/>',
+  doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>', undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/>',
+  cash:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>', clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>', trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  move:'<path d="M5 12h14M13 6l6 6-6 6"/>', more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'
+};
+const ic = (n, s) => `<svg width="${s||18}" height="${s||18}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+
+/** จำนวนเงินเป็นตัวอักษรไทย (1,000,001 = หนึ่งล้านเอ็ดบาทถ้วน) */
+function bahtText(v){
+  const D = ['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'], U = ['','สิบ','ร้อย','พัน','หมื่น','แสน'];
+  const seg = (n, higher) => { // n < 1,000,000 ; higher = มีหลักล้านนำหน้า
+    const t = String(n); let out = '';
+    for (let i = 0; i < t.length; i++){ const d = +t[i], p = t.length-1-i; if (!d) continue;
+      if (p === 1 && d === 1) out += 'สิบ'; else if (p === 1 && d === 2) out += 'ยี่สิบ';
+      else if (p === 0 && d === 1 && (n > 1 || higher)) out += 'เอ็ด'; else out += D[d] + U[p]; }
+    return out; };
+  const read = n => n >= 1e6 ? read(Math.floor(n/1e6)) + 'ล้าน' + seg(n % 1e6, true) : seg(n, false);
+  const st = Math.round(v*100), b = Math.floor(st/100), sg = st % 100;
+  return (b ? read(b) : (sg ? '' : 'ศูนย์')) + (b || !sg ? 'บาท' : '') + (sg ? read(sg) + 'สตางค์' : 'ถ้วน');
+}
+
+const SS = {
+  get(k){ try { return sessionStorage.getItem('qrstaff.'+k); } catch(e){ return null; } },
+  set(k, v){ try { v == null ? sessionStorage.removeItem('qrstaff.'+k) : sessionStorage.setItem('qrstaff.'+k, v); } catch(e){} }
+};
+const state = {token: SS.get('token'), data:null, edit:null, bedit:null, hist:null, histBusy:false, users:null, uedit:null, pin:null, reg:null,
+  sv:'orders', range:'today', st:'PAID', grp:'day', inv:null, issue:null, busy:'', err:'', q:'', pq:'', pbrand:'all', navOpen:false};
+
+// จำเครื่อง: รหัสอยู่ใน localStorage ของเครื่องนี้เท่านั้น
+const LSR = {
+  get(){ try { return localStorage.getItem('qrstaff.remember'); } catch(e){ return null; } },
+  set(v){ try { v ? localStorage.setItem('qrstaff.remember', v) : localStorage.removeItem('qrstaff.remember'); } catch(e){} }
+};
+// เก็บ error ล่าสุดในหน้า ไว้แนบตอนแจ้งปัญหา
+const ERRS = [];
+window.addEventListener('error', e => { ERRS.push(new Date().toTimeString().slice(0,8) + ' ' + (e.message || '')); if (ERRS.length > 5) ERRS.shift(); });
+
+const HINT = {
+  set(name){ try { localStorage.setItem('qrstaff.hint', JSON.stringify({name, exp: Date.now() + (LSR.get() ? 30 * 864e5 : 6 * 36e5)})); } catch(e){} },
+  clear(){ try { localStorage.removeItem('qrstaff.hint'); } catch(e){} }
+};
+function signedIn(u){ state.token = u.token; SS.set('token', u.token); if (u.remember) LSR.set(u.remember); HINT.set(u.name); }
+function signedOut(){ state.token = null; SS.set('token', null); state.data = null; state.users = null; state.bugs = null; HINT.clear(); }
+
+/** เข้าระบบอัตโนมัติจากรหัสจำเครื่อง คืน true ถ้าสำเร็จ */
+function resume(){
+  const rt = LSR.get();
+  if (!rt) return Promise.resolve(false);
+  return new Promise(ok => google.script.run.withSuccessHandler(u => { signedIn(u); ok(true); })
+    .withFailureHandler(() => { LSR.set(null); ok(false); }).staffResume(rt));
+}
+
+function call(fn, ...args){
+  const run = () => new Promise((ok, bad) => google.script.run.withSuccessHandler(ok)
+    .withFailureHandler(e => bad(e && e.message ? e : new Error(String(e))))[fn](state.token, ...args));
+  return run().catch(err => {
+    if (!/AUTH/.test(err.message)) throw err;
+    // token 6 ชม. หมดอายุ → ลองเข้าใหม่ด้วยรหัสจำเครื่องแล้วทำซ้ำ
+    return resume().then(ok => {
+      if (ok) return run();
+      signedOut(); render(); throw err;
+    });
+  });
+}
+
+/** ข้อความแจ้งผลชั่วคราวด้านล่างจอ */
+let toastTimer = null;
+function toast(msg, bad){
+  $('toast').innerHTML = `<div class="toast ${bad ? 'bad' : ''}">${ic(bad ? 'bugs' : 'check', 16)}${esc(msg)}</div>`;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').innerHTML = ''; }, 2600);
+}
+
+function login(){
+  const name = $('who').value.trim(), pin = $('pin').value.trim(), remember = $('remember').checked;
+  if (!name) { state.err = 'กรุณากรอกชื่อผู้ใช้'; return render(); }
+  if (!pin) { state.err = 'กรุณากรอก PIN'; return render(); }
+  state.loginName = name; state.remember = remember;
+  state.busy = 'login'; state.err = ''; render();
+  google.script.run.withSuccessHandler(u => { signedIn(u); state.busy = ''; load(); })
+    .withFailureHandler(e => { state.busy = ''; state.err = e.message; render(); }).staffLogin(name, pin, remember);
+}
+function logout(){ google.script.run.staffLogout(state.token, LSR.get()); LSR.set(null); signedOut(); state.navOpen = false; render(); }
+function load(manual){
+  if (manual) state.busy = 'reload';
+  return call('staffData').then(d => { state.data = d; state.err = ''; HINT.set(d.me.name); if (manual) toast('อัปเดตข้อมูลแล้ว'); })
+    .catch(e => { state.err = e.message; }).then(() => { if (manual) state.busy = ''; render(); });
+}
+setInterval(() => { if (state.token && !document.hidden && !state.inv && !state.issue && !state.edit && !state.bedit && !state.uedit && !state.pin && !state.bug && !state.navOpen) load(); }, 60000);
+
+const set = (k, v) => { state[k] = v; if (k === 'sv') { state.navOpen = false; state.err = ''; window.scrollTo(0, 0); }
+  if (k === 'sv' && v === 'bugs') state.bugs = null; if (k === 'sv' && v === 'history') state.hist = null; if (k === 'sv' && v === 'users') state.users = null; render(); };
+const seg = (cur, key, opts) => `<div class="seg">${opts.map(o => `<button class="${cur===o[0]?'on':''}" onclick="set('${key}','${o[0]}')">${o[1]}</button>`).join('')}</div>`;
+const orders = () => state.data ? state.data.orders : [];
+const paid = () => orders().filter(o => o.status === 'PAID');
+const fromOf = r => { const n = new Date(); return {today:startDay(n), week:startWeek(n), month:startMonth(n), all:new Date(0)}[r].getTime(); };
+const agg = os => ({n: os.length, sum: os.reduce((a,o) => a + o.total, 0), qty: os.reduce((a,o) => a + o.items.reduce((x,l) => x + l.qty, 0), 0)});
+const pageHead = (title, sub, acts) => `<div class="ph"><div><h1>${title}</h1>${sub ? `<p>${sub}</p>` : ''}</div>${acts ? `<div class="acts">${acts}</div>` : ''}</div>`;
+const loading = () => '<div class="spin"></div>';
+
+/** หน้าต่างย่อย: key = ชื่อ state ที่ปิดเมื่อกดนอกกรอบหรือกากบาท */
+function modal(key, title, body, foot, size, sub){
+  return `<div class="ov" onclick="if(event.target===this)set('${key}',null)"><div class="dlg ${size || ''}" role="dialog" aria-label="${esc(title)}">
+    <div class="dlg-h"><div><h3>${title}</h3>${sub ? `<p>${sub}</p>` : ''}</div><button class="icon-btn" onclick="set('${key}',null)" aria-label="ปิด">${ic('x', 20)}</button></div>
+    <div class="dlg-b">${body}</div>${foot ? `<div class="dlg-f">${foot}</div>` : ''}</div></div>`;
+}
+
+// ---------------------------------------------------------------- เมนูและโครงหน้า
+
+function navItems(){
+  const d = state.data, me = d.me, nPend = orders().filter(o => o.status === 'PENDING').length;
+  const items = [
+    {k:'orders', t:'ออเดอร์', i:'orders', b: nPend},
+    {k:'summary', t:'สรุปยอดขาย', i:'summary'},
+    {k:'docs', t:'คลังใบเสร็จ / ใบกำกับ', i:'doc'},
+    {k:'products', t:'สินค้า', i:'products'},
+    {k:'brands', t:'แบรนด์', i:'brands'},
+    {k:'coupons', t:'คูปองส่วนลด', i:'tag'},
+    {k:'history', t:'ประวัติการแก้ไข', i:'history'}
+  ];
+  if (me.role === 'admin') items.push({k:'users', t:'พนักงาน', i:'users', b: d.usersPending}, {k:'bugs', t:'ปัญหาที่ได้รับแจ้ง', i:'bugs', b: d.bugsNew});
+  return items;
+}
+const badge = n => n ? `<span class="badge">${n > 99 ? '99+' : n}</span>` : '';
+const initial = n => esc(String(n || '?').trim().charAt(0).toUpperCase());
+const logoHtml = () => `<div class="logo"><i>${ic('store', 19)}</i><div><b>หลังร้าน</b><span>${esc(BOOT.shopName || 'Scan & Shop by TIBD')}</span></div></div>`;
+
+function accountMenu(){
+  const me = state.data.me;
+  return `<button onclick="goStore()">${ic('store')}ดูหน้าร้าน</button>
+    <button onclick="openBug()">${ic('bugs')}แจ้งปัญหา</button>
+    ${me.name !== 'TIBD' ? `<button onclick="set('pin',{err:'',busy:false})">${ic('key')}เปลี่ยน PIN</button>` : ''}
+    <button onclick="logout()">${ic('logout')}ออกจากระบบ</button>`;
+}
+
+function render(){
+  const d = state.data;
+  $('note').innerHTML = d && d.sandbox ? '<div class="banner">โหมดทดสอบ (ChillPay sandbox) ออเดอร์ในระบบนี้ไม่ใช่เงินจริง</div>' : '';
+  if (!state.token){ $('root').innerHTML = state.reg ? regView() : loginView(); $('ov').innerHTML = ''; return; }
+  if (!d){ $('root').innerHTML = state.err ? `<div class="auth"><div class="box2"><div class="err">${esc(state.err)}</div><button class="btn block" onclick="load()">ลองใหม่</button></div></div>` : `<div class="auth">${loading()}</div>`; $('ov').innerHTML = ''; return; }
+  const me = d.me, items = navItems();
+  const view = ({orders:ordersView, summary:summaryView, products:productsView, brands:brandsView, docs:docsView, coupons:couponsView, history:historyView, users:usersView, bugs:bugsView}[state.sv] || ordersView)();
+  const main4 = ['orders','summary','products'], inMore = !main4.includes(state.sv);
+  const moreBadge = items.filter(x => !main4.includes(x.k)).reduce((a, x) => a + (x.b || 0), 0);
+  $('root').innerHTML = `<div class="shell">
+    <aside class="side">${logoHtml()}
+      <nav class="nav">${items.map(x => `<button class="${state.sv === x.k ? 'on' : ''}" onclick="set('sv','${x.k}')">${ic(x.i)}${x.t}${badge(x.b)}</button>`).join('')}
+        <div class="sep"></div>
+        <button onclick="load(true)" ${state.busy === 'reload' ? 'disabled' : ''}>${ic('refresh')}${state.busy === 'reload' ? 'กำลังโหลด…' : 'รีเฟรชข้อมูล'}</button>
+        ${accountMenu()}</nav>
+      <div class="me"><div class="ava">${initial(me.name)}</div><div class="who"><b>${esc(me.name)}</b><span>${me.role === 'admin' ? 'ผู้ดูแล' : 'พนักงาน'}</span></div></div>
+    </aside>
+    <div class="content">
+      <div class="topbar">${logoHtml()}<button class="icon-btn" onclick="openBug()" aria-label="แจ้งปัญหา">${ic('bugs', 20)}</button><button class="icon-btn" onclick="load(true)" aria-label="รีเฟรช">${ic('refresh', 20)}</button>
+        <button class="ava" style="border:0;cursor:pointer" onclick="set('navOpen',true)" aria-label="เมนูบัญชี">${initial(me.name)}</button></div>
+      <main>${state.err ? `<div class="err">${esc(state.err)}</div>` : ''}${view}</main>
+    </div>
+    <nav class="tabbar">${items.filter(x => main4.includes(x.k)).map(x => `<button class="${state.sv === x.k ? 'on' : ''}" onclick="set('sv','${x.k}')">${ic(x.i, 22)}${x.t === 'สรุปยอดขาย' ? 'สรุป' : x.t}${badge(x.b)}</button>`).join('')}
+      <button class="${inMore ? 'on' : ''}" onclick="set('navOpen',true)">${ic('menu', 22)}เมนู${badge(moreBadge)}</button></nav>
+  </div>`;
+  $('ov').innerHTML = state.bugImg ? bugImgView() : state.navOpen ? navSheet() : state.bug ? bugView() : state.pin ? pinView() : state.uedit ? userEditView() : state.bedit ? brandEditView() : state.edit ? editView() : state.cedit ? cEditView() : state.bsale ? bsaleView() : state.issue ? issueView() : state.inv ? invView() : state.rcv ? rcvView() : state.docReport ? docReportView() : '';
+}
+
+/** ไปหน้าร้านในแท็บเดิม (token ใน sessionStorage ยังอยู่ กลับมาไม่ต้องล็อกอินใหม่) */
+function goStore(){
+  // หน้าร้านใหม่อยู่คนละโดเมน ส่งชื่อไปด้วยเพื่อให้หน้าร้านขึ้นปุ่ม "หลังร้าน" กลับมาที่นี่ (ไม่ใช่สิทธิ์เข้าระบบ ต้องใส่ PIN ตามปกติ)
+  let url = BOOT.base + '?stay=1';
+  if (BOOT.shopUrl) {
+    let h = null; try { h = JSON.parse(localStorage.getItem('qrstaff.hint') || 'null'); } catch(e){}
+    url = BOOT.shopUrl + (BOOT.shopUrl.indexOf('?') >= 0 ? '&' : '?') + 'staff=' + encodeURIComponent((h && h.name) || '1');
+  }
+  try { window.top.location.href = url; } catch(e) { window.open(url, '_top'); }
+}
+
+/** เมนูทั้งหมดบนมือถือ */
+function navSheet(){
+  const me = state.data.me;
+  return modal('navOpen', esc(me.name), `<nav class="nav" style="padding:0 0 8px">${navItems().map(x => `<button class="${state.sv === x.k ? 'on' : ''}" onclick="set('sv','${x.k}')">${ic(x.i)}${x.t}${badge(x.b)}</button>`).join('')}
+    <div class="sep"></div>${accountMenu()}</nav>`, '', 'sm', me.role === 'admin' ? 'ผู้ดูแล' : 'พนักงาน');
+}
+
+// ---------------------------------------------------------------- เข้าสู่ระบบ / สร้างบัญชี / ลืมรหัส
+
+function loginView(){
+  return `<div class="auth"><div class="box2">${logoHtml()}
+    <h2>เข้าสู่ระบบพนักงาน</h2><p class="note" style="margin:0 0 6px">สำหรับพนักงานร้าน ลูกค้าไม่ต้องเข้าหน้านี้</p>
+    <label for="who">ชื่อผู้ใช้</label><input type="text" id="who" maxlength="40" autocomplete="username" value="${esc(state.loginName || '')}" onkeydown="if(event.key==='Enter')$('pin').focus()">
+    <label for="pin">PIN</label><input type="password" id="pin" inputmode="numeric" maxlength="20" autocomplete="current-password" placeholder="ตัวเลข 6 หลัก" onkeydown="if(event.key==='Enter')login()">
+    <label class="chk"><input type="checkbox" id="remember" ${state.remember === false ? '' : 'checked'}><span>จำฉันไว้ในเครื่องนี้ 30 วัน<br><span class="note">อย่าติ๊กบนเครื่องที่ใช้ร่วมกับคนอื่น</span></span></label>
+    ${state.err ? `<div class="err">${esc(state.err)}</div>` : ''}
+    <button class="btn block" style="margin-top:8px" onclick="login()" ${state.busy ? 'disabled' : ''}>${state.busy ? 'กำลังตรวจ…' : 'เข้าสู่ระบบ'}</button>
+    <div class="row2"><button class="btn sec" onclick="openReg('create')">${ic('plus', 16)}สร้างบัญชี</button><button class="btn sec" onclick="openReg('forgot')">${ic('key', 16)}ลืมรหัส</button></div>
+  </div></div>`;
+}
+function openReg(mode){
+  const w = $('who'); if (w) state.loginName = w.value.trim(); // ใช้ชื่อที่พิมพ์ไว้ในหน้าเข้าสู่ระบบ
+  state.reg = {mode, err:'', busy:false, done:null}; state.err = ''; render();
+}
+function regView(){
+  const e = state.reg, forgot = e.mode === 'forgot';
+  if (e.done) return `<div class="auth"><div class="box2">${logoHtml()}
+    <div class="dot m" style="width:46px;height:46px;border-radius:50%;margin:4px 0 10px">${ic('check', 24)}</div>
+    <h2>${forgot ? 'ตั้ง PIN ใหม่แล้ว' : 'สร้างบัญชีแล้ว'}</h2>
+    <p>บัญชี <b>${esc(e.done)}</b> ${forgot ? 'PIN เดิมใช้ไม่ได้แล้ว และ' : ''}รอผู้ดูแลอนุมัติ เมื่ออนุมัติแล้วเข้าสู่ระบบด้วยชื่อนี้และ PIN ที่เพิ่งตั้งได้เลย</p>
+    <button class="btn block" onclick="state.loginName='${esc(e.done)}';set('reg',null)">กลับหน้าเข้าสู่ระบบ</button></div></div>`;
+  return `<div class="auth"><div class="box2">${logoHtml()}
+    <h2>${forgot ? 'ลืมรหัส' : 'สร้างบัญชี'}</h2>
+    <p class="note" style="margin:0 0 4px">${forgot ? 'ตั้ง PIN ใหม่ได้ทันที PIN เดิมจะใช้ไม่ได้ แล้วรอผู้ดูแลอนุมัติก่อนเข้าใช้งาน' : 'สร้างบัญชีแล้วต้องรอผู้ดูแลอนุมัติก่อนเข้าใช้งาน'}</p>
+    <label for="r_name">ชื่อผู้ใช้${forgot ? '' : ' <span class="note">ใช้ตอนเข้าสู่ระบบและแสดงในประวัติ</span>'}</label><input type="text" id="r_name" maxlength="40" value="${esc(state.loginName || '')}">
+    <div class="two"><div><label for="r_pin">${forgot ? 'PIN ใหม่' : 'ตั้ง PIN'}</label><input type="password" id="r_pin" inputmode="numeric" maxlength="6" placeholder="ตัวเลข 6 หลัก"></div>
+      <div><label for="r_pin2">ยืนยัน PIN</label><input type="password" id="r_pin2" inputmode="numeric" maxlength="6" onkeydown="if(event.key==='Enter')register()"></div></div>
+    ${e.err ? `<div class="err">${esc(e.err)}</div>` : ''}
+    <button class="btn block" style="margin-top:14px" onclick="register()" ${e.busy ? 'disabled' : ''}>${e.busy ? 'กำลังบันทึก…' : forgot ? 'ตั้ง PIN ใหม่' : 'สร้างบัญชี'}</button>
+    <button class="btn ghost block" style="margin-top:6px" onclick="set('reg',null)">กลับหน้าเข้าสู่ระบบ</button></div></div>`;
+}
+function register(){
+  const e = state.reg, name = $('r_name').value.trim(), pin = $('r_pin').value.trim(), pin2 = $('r_pin2').value.trim();
+  state.loginName = name;
+  if (!name) { e.err = 'กรุณากรอกชื่อผู้ใช้'; return render(); }
+  if (!/^\d{6}$/.test(pin)) { e.err = 'PIN ต้องเป็นตัวเลข 6 หลัก'; return render(); }
+  if (pin !== pin2) { e.err = 'PIN สองช่องไม่ตรงกัน'; return render(); }
+  e.busy = true; e.err = ''; render();
+  google.script.run.withSuccessHandler(r => { e.busy = false; e.done = r.name; render(); })
+    .withFailureHandler(err => { e.busy = false; e.err = err.message; render(); })[e.mode === 'forgot' ? 'staffForgotPin' : 'staffRegister'](name, pin);
+}
+
+// ---------------------------------------------------------------- ออเดอร์
+
+function ordersView(){
+  const from = fromOf(state.range), q = state.q.trim().toLowerCase();
+  const inRange = orders().filter(o => o.ts >= from);
+  const cnt = s => inRange.filter(o => inSt(o, s)).length;
+  const os = inRange.filter(o => inSt(o, state.st) &&
+    (!q || [o.no, o.form.name, o.form.company, o.form.phone, o.form.tname].join(' ').toLowerCase().includes(q)));
+  const pd = inRange.filter(o => o.status === 'PAID'), a = agg(pd);
+  const needInv = pd.filter(o => o.form.tax && !o.inv).length, shown = os.slice(0, 100);
+  const rangeTh = {today:'วันนี้', week:'สัปดาห์นี้', month:'เดือนนี้', all:'ทั้งหมด'}[state.range];
+  return pageHead('ออเดอร์', 'ออเดอร์จากหน้าร้าน อัปเดตสถานะการจ่ายเงินจาก ChillPay อัตโนมัติทุก 1 นาที') +
+    `<div class="stats">
+      <div class="stat"><div class="si m">${ic('cash')}</div><div><span>ยอดขาย${rangeTh}</span><b>${num(a.sum)}</b><small>บาท</small></div></div>
+      <div class="stat"><div class="si s">${ic('orders')}</div><div><span>ออเดอร์ชำระแล้ว</span><b>${a.n}</b><small>${a.qty} ชิ้น</small></div></div>
+      <div class="stat"><div class="si w">${ic('clock')}</div><div><span>รอชำระ</span><b>${cnt('PENDING')}</b><small>ออเดอร์</small></div></div>
+      <div class="stat"><div class="si c">${ic('doc')}</div><div><span>รอออกใบกำกับภาษี</span><b>${needInv}</b><small>ออเดอร์</small></div></div>
+    </div>
+    <div class="toolbar">${seg(state.range, 'range', [['today','วันนี้'],['week','สัปดาห์นี้'],['month','เดือนนี้'],['all','ทั้งหมด']])}
+      <div class="chips">${[['PAID','ชำระแล้ว'],['PENDING','รอชำระ'],['FAIL','ไม่สำเร็จ'],['all','ทุกสถานะ']].map(s => `<button class="chip ${state.st === s[0] ? 'on' : ''}" onclick="set('st','${s[0]}')">${s[1]}<span class="c">${cnt(s[0])}</span></button>`).join('')}</div>
+      <label class="search" style="margin:0">${ic('search', 16)}<input type="text" id="oq" placeholder="ค้นหาเลขออเดอร์ ชื่อ เบอร์โทร" value="${esc(state.q)}" oninput="state.q=this.value;clearTimeout(window._qt);window._qt=setTimeout(()=>{render();const el=$('oq');el.focus();el.setSelectionRange(el.value.length,el.value.length)},250)"></label></div>` +
+    (state.st === 'FAIL' && os.length ? `<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div><b>ออเดอร์ที่ไม่สำเร็จ ${os.length} รายการ</b><br><span class="note">หมดเวลา ยกเลิก หรือสร้างลิงก์ไม่สำเร็จ ไม่มีเงินเข้า ลบออกได้</span></div>
+      <button class="btn danger" onclick="deleteOrders(${esc(JSON.stringify(os.map(o => o.no)))})" ${state.busy === 'del' ? 'disabled' : ''}>${ic('trash', 16)}${state.busy === 'del' ? 'กำลังลบ…' : 'ลบทั้งหมด ' + os.length + ' รายการ'}</button></div>` : '') +
+    (os.length ? `<div class="list"><div class="lhead"><div>ออเดอร์</div><div>ผู้ซื้อ</div><div>รายการ</div><div style="text-align:right">ยอดรวม</div><div>สถานะ</div><div>เอกสาร</div></div>` +
+      shown.map(rowHtml).join('') + (os.length > shown.length ? `<div class="more">แสดง ${shown.length} จาก ${os.length} รายการล่าสุด ดูทั้งหมดได้ในแท็บ Orders ของ Google Sheet</div>` : '') + '</div>'
+    : `<div class="empty">${q ? 'ไม่พบออเดอร์ที่ค้นหา' : 'ยังไม่มีออเดอร์ในช่วงนี้'}</div>`);
+}
+function rowHtml(o){
+  const d = new Date(o.ts), f = o.form, no = esc(o.no);
+  let tax = '<span class="note">ไม่ได้ขอ</span>';
+  if (o.inv) tax = `<button class="btn sec sm" onclick="openInv('${no}')">${ic('doc', 15)}${esc(o.inv.no)}</button>`;
+  else if (o.status === 'PAID') tax = f.tax ? `<button class="btn sm" onclick="startIssue('${no}')">${ic('doc', 15)}ออกใบกำกับภาษี</button>`
+                                           : `<button class="lk" onclick="startIssue('${no}')">ออกใบกำกับ</button>`;
+  else if (f.tax) tax = '<span class="note">ขอใบกำกับ · ออกได้หลังชำระ</span>';
+  return `<div class="orow">
+    <div class="no"><b>${no}</b><span class="note">${thDate(d)} ${hm(d)}</span></div>
+    <div class="buyer"><span class="lab">ผู้ซื้อ</span>${[f.name, f.company].filter(Boolean).map(esc).join(' · ') || '-'}${f.phone ? `<br><span class="note">${esc(f.phone)}</span>` : ''}${f.tax && f.tname ? `<br><span class="note">ใบกำกับ: ${esc(f.tname)}${f.temail ? ' · ส่งที่ ' + esc(f.temail) : ''}</span>` : ''}</div>
+    <div class="items"><span class="lab">รายการ</span>${o.items.map(l => esc(l.name) + ' × ' + l.qty).join('<br>')}</div>
+    <div class="amt">${baht(o.total)}${o.discount ? `<br><span class="note" style="font-weight:400">ส่วนลด ${esc(o.coupon)} -${num(o.discount)}</span>` : ''}</div>
+    <div class="st"><span class="pill ${esc(o.status)}">${esc(STATUS_TH[o.status] || o.status)}</span>
+      ${o.channel ? `<br><span class="note">${esc(o.channel)}</span>` : ''}
+      ${o.status === 'PENDING' ? `<br><button class="lk" onclick="refresh('${no}')" ${state.busy === o.no ? 'disabled' : ''}>${state.busy === o.no ? 'กำลังเช็ก…' : 'เช็กกับ ChillPay'}</button>` : ''}
+      ${o.note ? `<br><span class="note">${esc(o.note)}</span>` : ''}
+      ${FAIL_ST.includes(o.status) ? `<br><button class="lk" style="color:var(--bad)" onclick="deleteOrders(['${no}'])" ${state.busy === 'del' ? 'disabled' : ''}>ลบออเดอร์นี้</button>` : ''}</div>
+    <div class="acts"><span class="lab">เอกสาร</span>${rcHtml(o)}${tax}</div>
+  </div>`;
+}
+/** ใบเสร็จ/ใบกำกับภาษีอย่างย่อ (ระบบออกให้อัตโนมัติเมื่อชำระสำเร็จ) */
+function rcHtml(o){
+  if (o.status !== 'PAID') return '';
+  const r = o.rc, no = esc(o.no), busy = state.busy === 'rc' + o.no ? 'disabled' : '';
+  if (!r) return `<div class="rcl"><button class="lk" onclick="openRcv('${no}')" ${busy}>${ic('doc', 14)}ใบเสร็จ</button></div>`;
+  const ans = r.status === 'REPLACED' ? 'ยกเลิก · ใช้ใบกำกับเต็มรูปแทน'
+    : r.wanted === 'yes' ? 'ลูกค้ารับ' + (r.emailed ? ' · ส่งอีเมลแล้ว' : '') : r.wanted === 'no' ? 'ลูกค้าไม่รับ' : 'ลูกค้ายังไม่ได้เลือก';
+  return `<div class="rcl"><button class="lk" onclick="openRcv('${no}')" ${busy}>${ic('doc', 14)}${esc(r.no)}</button><span class="note">${ans}</span></div>`;
+}
+function openRcv(no){
+  state.busy = 'rc' + no; render();
+  call('staffReceipt', no).then(v => { state.busy = null; state.rcv = v; const o = findOrder(no); if (o) o.rc = v; render(); })
+    .catch(e => { state.busy = null; render(); toast(e.message); });
+}
+function rcvView(){
+  return `<div class="ov" onclick="if(event.target===this)set('rcv',null)"><div class="dlg">
+    <div class="invbar"><button class="btn sec" onclick="set('rcv',null)">ปิด</button><button class="btn" onclick="window.print()">${ic('doc', 16)}พิมพ์ / บันทึก PDF</button></div>
+    <div class="rcdoc">${state.rcv.html}</div></div></div>`;
+}
+const FAIL_ST = ['EXPIRED', 'CANCELLED', 'FAILED'];
+/** ออเดอร์อยู่ในกลุ่มสถานะของปุ่มกรองหรือไม่ */
+const inSt = (o, s) => s === 'all' || o.status === s || (s === 'PAID' && o.status === 'REVIEW') || (s === 'FAIL' && FAIL_ST.includes(o.status));
+/** ลบออเดอร์ที่ไม่สำเร็จ (ลบได้เฉพาะหมดเวลา ยกเลิก สร้างลิงก์ไม่สำเร็จ) */
+function deleteOrders(nos){
+  if (!nos.length) return;
+  if (!confirm(nos.length === 1 ? 'ลบออเดอร์ ' + nos[0] + '?' : 'ลบออเดอร์ที่ไม่สำเร็จทั้งหมด ' + nos.length + ' รายการ?')) return;
+  state.busy = 'del'; render();
+  call('staffDeleteOrders', nos).then(d => { state.data = d; toast('ลบแล้ว ' + nos.length + ' รายการ'); })
+    .catch(e => { toast(e.message, true); }).then(() => { state.busy = ''; render(); });
+}
+function refresh(no){
+  state.busy = no; render();
+  call('staffRefreshOrder', no).then(d => { state.data = d; const o = findOrder(no); toast(o && o.status === 'PAID' ? 'ชำระแล้ว' : 'ยังไม่พบการชำระเงิน'); })
+    .catch(e => { toast(e.message, true); }).then(() => { state.busy = ''; render(); });
+}
+
+// ---------------------------------------------------------------- สินค้า
+
+function productsView(){
+  const d = state.data, q = state.pq.trim().toLowerCase();
+  const ps = d.products.filter(p => (state.pbrand === 'all' || p.brand === state.pbrand) && (!q || (p.name + ' ' + (p.code || p.sku) + ' ' + (p.category || '')).toLowerCase().includes(q)));
+  const on = d.products.filter(p => p.active).length;
+  return pageHead('สินค้า', `${d.products.length} รายการ · แสดงในร้าน ${on} · ซ่อน ${d.products.length - on}`,
+      `<button class="btn" onclick="editProduct(null)">${ic('plus', 17)}เพิ่มสินค้า</button>`) +
+    `<div class="toolbar"><div class="chips"><button class="chip ${state.pbrand === 'all' ? 'on' : ''}" onclick="set('pbrand','all')">ทุกแบรนด์</button>
+      ${d.brands.map(b => `<button class="chip ${state.pbrand === b.id ? 'on' : ''}" onclick="set('pbrand','${esc(b.id)}')">${esc(b.name)}<span class="c">${d.products.filter(p => p.brand === b.id).length}</span></button>`).join('')}</div>
+      <label class="search" style="margin:0">${ic('search', 16)}<input type="text" id="pq" placeholder="ค้นหาชื่อหรือรหัสสินค้า" value="${esc(state.pq)}" oninput="state.pq=this.value;clearTimeout(window._pt);window._pt=setTimeout(()=>{render();const el=$('pq');el.focus();el.setSelectionRange(el.value.length,el.value.length)},250)"></label></div>` +
+    (ps.length ? '<div class="pgrid">' + ps.map(p => { const id = esc(p.id), busy = state.busy === 'p:' + p.id;
+      return `<div class="pcard ${p.active ? '' : 'off'}">
+        <div class="img">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : `<div class="noimg">${ic('image', 26)}ไม่มีภาพ</div>`}
+          ${p.active ? '' : '<span class="pill tagb">ซ่อนอยู่</span>'}${p.onSale && p.active ? `<span class="pill tagb sale">-${Math.round((1 - p.sale / p.price) * 100)}%</span>` : ''}</div>
+        <div class="bd"><span class="sub">${esc(p.code || p.sku)}${p.category ? ' · ' + esc(p.category) : ''}</span><b>${esc(p.name)}</b>${p.size ? `<span class="sub">${esc(p.size)}</span>` : ''}
+          <div class="price" style="margin-top:6px">${p.price == null ? '<span class="note" style="font-weight:400">ยังไม่กำหนดราคา</span>'
+            : p.onSale ? `<span class="salep"><s>${num(p.price)}</s>${num(p.sale)}</span> <span class="note" style="font-weight:400">บาท</span>`
+            : num(p.price) + ' <span class="note" style="font-weight:400">บาท</span>'}</div>
+          ${p.sale != null && p.price != null ? `<span class="note">${p.saleLabel ? esc(p.saleLabel) : p.onSale ? 'ลดราคาอยู่' : 'ตั้งราคาพิเศษ ' + num(p.sale) + ' (ยังไม่อยู่ในช่วง)'}${p.saleEnd ? ' ถึง ' + esc(p.saleEnd) : ''}</span>` : ''}
+          <div class="ft"><label class="tg" title="แสดงในหน้าร้าน" style="margin:0"><input type="checkbox" ${p.active ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="toggleProduct('${id}', this.checked)"><i></i>${busy ? '…' : p.active ? 'แสดง' : 'ซ่อน'}</label>
+            <button class="btn sec sm" onclick="editProduct('${id}')">${ic('edit', 15)}แก้ไข</button></div></div></div>`; }).join('') + '</div>'
+    : `<div class="empty">${q || state.pbrand !== 'all' ? 'ไม่พบสินค้า' : 'ยังไม่มีสินค้า กด "เพิ่มสินค้า" เพื่อเริ่ม'}</div>`) +
+    '<p class="note" style="margin-top:14px">ซ่อน = ลูกค้าไม่เห็นและสั่งซื้อไม่ได้ · สินค้าที่ยังไม่มีราคาจะแสดงในร้านแต่ใส่ตะกร้าไม่ได้</p>';
+}
+function editProduct(id){
+  const d = state.data, p = id ? d.products.find(x => x.id === id) : null;
+  state.edit = {originalId: id || '', err:'', busy:false, image:null, preview: p ? p.img : '',
+    p: p ? {...p, price: p.price == null ? '' : p.price, sale: p.sale == null ? '' : p.sale}
+      : {brand: (state.pbrand !== 'all' ? state.pbrand : (d.brands[0] || {}).id) || '', sku:'', name:'', desc:'', size:'', price:'', ingredients:'', details:'', category:'', active:true, sale:'', saleStart:'', saleEnd:''}};
+  render();
+}
+function readEdit(){
+  const p = state.edit.p;
+  ['brand','name','desc','size','price','ingredients','details','category','sale','saleStart','saleEnd','nameEn','descEn','categoryEn','detailsEn'].forEach(k => { const el = $('e_'+k); if (el) p[k] = el.value; });
+  const co = $('e_company'); if (co) { p.saleLabel = co.checked ? CO_LABEL : ''; if (co.checked) { p.saleStart = ''; p.saleEnd = ''; } }
+  const a = $('e_active'); if (a) p.active = a.checked;
+}
+function pickImage(input, which){
+  which = which || 'edit';
+  which === 'bedit' ? readBEdit() : readEdit();
+  const f = input.files && input.files[0], e = state[which], max = which === 'bedit' ? 3 : 2;
+  if (!f) return;
+  if (!/^image\/(jpeg|png)$/.test(f.type)) { e.err = 'รูปต้องเป็น JPG หรือ PNG'; return render(); }
+  if (f.size > max * 1024 * 1024) { e.err = 'รูปใหญ่เกิน ' + max + ' MB'; return render(); }
+  const r = new FileReader();
+  r.onload = () => { const url = String(r.result); e.image = {name:f.name, type:f.type, data:url.slice(url.indexOf(',') + 1)}; e.preview = url; e.err = ''; render(); };
+  r.readAsDataURL(f);
+}
+function editView(){
+  const e = state.edit, p = e.p, d = state.data;
+  const v = k => esc(p[k] == null ? '' : p[k]);
+  const body = `
+    <div class="upl" style="margin-top:4px"><div class="pv">${e.preview ? `<img src="${esc(e.preview)}" alt="">` : `<div class="noimg">${ic('image', 22)}</div>`}</div>
+      <div><span class="btn sec sm file">${ic('image', 15)}${e.preview ? 'เปลี่ยนรูป' : 'เลือกรูป'}<input type="file" accept="image/jpeg,image/png" onchange="pickImage(this)"></span>
+        <p class="note" style="margin:6px 0 0">JPG/PNG พื้นหลังขาว ไม่เกิน 2 MB</p></div></div>
+    <label for="e_name">ชื่อสินค้า</label><input type="text" id="e_name" maxlength="120" value="${v('name')}">
+    <div class="two"><div><label for="e_brand">แบรนด์</label><select id="e_brand">
+      ${d.brands.map(b => `<option value="${esc(b.id)}" ${b.id === p.brand ? 'selected' : ''}>${esc(b.name)}</option>`).join('')}</select></div>
+      <div><label>รหัสสินค้า <span class="note">ระบบรันให้</span></label><input type="text" disabled value="${e.originalId ? esc(p.code || '') : 'สร้างให้อัตโนมัติ'}"></div></div>
+    <p class="note" style="margin:4px 0 0">รหัส = ชื่อแบรนด์ + เลขรัน เช่น GENIO-06${e.originalId ? ' · เปลี่ยนแบรนด์ = ย้ายสินค้าไปแบรนด์นั้น (ถ้าเลขชนจะรันเลขใหม่ให้)' : ''}</p>
+    <div class="two"><div><label for="e_price">ราคา (บาท)</label><input type="text" id="e_price" inputmode="decimal" placeholder="เว้นว่างถ้ายังไม่กำหนด" value="${v('price')}" oninput="fromPct($('e_salePct').value, true)"></div>
+      <div><label for="e_size">ขนาด</label><input type="text" id="e_size" maxlength="40" placeholder="เช่น 30 ml" value="${v('size')}"></div></div>
+    <div class="box salebox"><b>${ic('tag', 16)} ราคาพิเศษ (ลดราคา)</b> <span class="note">ไม่บังคับ · ว่าง = ขายราคาปกติ</span>
+      <div class="two"><div><label for="e_salePct">ลดกี่ %</label><input type="text" id="e_salePct" inputmode="decimal" placeholder="เช่น 15" value="${salePctOf(p.price, p.sale)}" oninput="fromPct(this.value)"></div>
+        <div><label for="e_sale">ราคาหลังลด (บาท)</label><input type="text" id="e_sale" inputmode="decimal" placeholder="ต่ำกว่าราคาปกติ" value="${v('sale')}" oninput="fromSale(this.value)"></div></div>
+      <p class="note" style="margin:4px 0 0">ใส่ช่องไหนก็ได้ อีกช่องคำนวณให้เอง</p>
+      <label class="chk" style="margin-top:10px"><input type="checkbox" id="e_company" ${p.saleLabel === CO_LABEL ? 'checked' : ''} onchange="readEdit();render()"><span><b>${CO_LABEL}</b><br><span class="note">ไม่จำกัดเวลา หน้าร้านขึ้นป้ายนี้ใต้ราคา</span></span></label>
+      ${p.saleLabel === CO_LABEL ? '' : `<div class="two"><div><label for="e_saleStart">ตั้งแต่ <span class="note">ว่าง = ทันที</span></label><input type="date" id="e_saleStart" value="${v('saleStart')}"></div>
+        <div><label for="e_saleEnd">ถึง <span class="note">ว่าง = ไม่มีกำหนด</span></label><input type="date" id="e_saleEnd" value="${v('saleEnd')}"></div></div>`}
+      <p class="note" style="margin:6px 0 0">หน้าร้านจะแสดงราคาเดิมขีดฆ่าและป้าย % ส่วนลด${p.saleLabel === CO_LABEL ? '' : ' หมดช่วงแล้วกลับเป็นราคาปกติเอง'}</p></div>
+    <label for="e_category">หมวดสินค้า <span class="note">ลูกค้าใช้กรองสินค้า พิมพ์ใหม่หรือเลือกหมวดเดิม</span></label>
+    <input type="text" id="e_category" maxlength="40" list="cats" placeholder="เช่น เซรั่ม กันแดด" value="${v('category')}">
+    <datalist id="cats">${[...new Set(d.products.map(x => x.category).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('')}</datalist>
+    <label for="e_desc">คำอธิบายสั้น</label><input type="text" id="e_desc" maxlength="200" placeholder="เช่น เซรั่มบำรุงผิวหน้า" value="${v('desc')}">
+    <label for="e_ingredients">ส่วนประกอบสำคัญ <span class="note">คั่นด้วยจุลภาค</span></label><input type="text" id="e_ingredients" maxlength="500" value="${v('ingredients')}">
+    <label for="e_details">รายละเอียด <span class="note">บรรทัดละหัวข้อ รูปแบบ หัวข้อ: ข้อความ</span></label><textarea id="e_details" style="min-height:96px" placeholder="วิธีใช้: ทาเช้าและเย็น">${v('details')}</textarea>
+    <details class="box enbox" ${p.nameEn || p.descEn || p.detailsEn ? 'open' : ''}><summary><b>ภาษาอังกฤษ</b> <span class="note">สำหรับลูกค้าที่เลือก EN · ช่องที่ว่างจะใช้ภาษาไทยแทน</span></summary>
+      <label for="e_nameEn">Product name</label><input type="text" id="e_nameEn" maxlength="120" placeholder="ว่าง = ใช้ชื่อภาษาไทย" value="${v('nameEn')}">
+      <div class="two"><div><label for="e_descEn">Short description</label><input type="text" id="e_descEn" maxlength="200" placeholder="e.g. Facial serum" value="${v('descEn')}"></div>
+        <div><label for="e_categoryEn">Category</label><input type="text" id="e_categoryEn" maxlength="40" list="catsEn" placeholder="e.g. Serum" value="${v('categoryEn')}"></div></div>
+      <datalist id="catsEn">${[...new Set(d.products.map(x => x.categoryEn).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('')}</datalist>
+      <label for="e_detailsEn">Details <span class="note">Topic: text, one per line</span></label><textarea id="e_detailsEn" style="min-height:96px" placeholder="How to use: Apply morning and night">${v('detailsEn')}</textarea></details>
+    <div class="box"><label class="tg" style="margin:0"><input type="checkbox" id="e_active" ${p.active ? 'checked' : ''}><i></i>แสดงในหน้าร้าน</label></div>
+    ${e.err ? `<div class="err">${esc(e.err)}</div>` : ''}`;
+  const foot = `${e.originalId ? `<button class="btn danger" onclick="deleteProduct()" ${e.busy ? 'disabled' : ''}>${ic('trash', 16)}ลบ</button>` : ''}
+    <div class="r"><button class="btn sec" onclick="set('edit',null)">ยกเลิก</button><button class="btn" onclick="saveProduct()" ${e.busy ? 'disabled' : ''}>${e.busy ? 'กำลังบันทึก…' : 'บันทึก'}</button></div>`;
+  return modal('edit', e.originalId ? 'แก้ไขสินค้า' : 'เพิ่มสินค้า', body, foot);
+}
+const CO_LABEL = 'ราคาพิเศษเฉพาะซื้อที่บริษัท'; // ต้องตรงกับ SALE_LABEL_COMPANY ฝั่งเซิร์ฟเวอร์
+/** ราคาพิเศษ: ใส่ % แล้วคำนวณราคาหลังลด หรือใส่ราคาแล้วบอก % */
+const toNum = v => Number(String(v == null ? '' : v).replace(/,/g, '').trim());
+function salePctOf(price, sale){
+  const p = toNum(price), s = toNum(sale);
+  return p > 0 && s > 0 && s < p && String(sale).trim() !== '' ? String(Math.round((1 - s / p) * 1000) / 10) : '';
+}
+function fromPct(v, keepBlank){
+  const p = toNum($('e_price').value), n = toNum(v), sale = $('e_sale');
+  if (String(v).trim() === '') { if (!keepBlank) sale.value = ''; return; }
+  if (p > 0 && n > 0 && n < 100) sale.value = Math.round(p * (1 - n / 100) * 100) / 100;
+}
+function fromSale(v){ $('e_salePct').value = salePctOf($('e_price').value, v); }
+function saveProduct(){
+  readEdit();
+  const e = state.edit, p = e.p;
+  if (!p.name.trim()) { e.err = 'กรุณากรอกชื่อสินค้า'; return render(); }
+  e.busy = true; e.err = ''; render();
+  call('staffSaveProduct', {...p, originalId: e.originalId}, e.image).then(d => { state.data = d; state.edit = null; render(); toast(e.originalId ? 'บันทึกการแก้ไขแล้ว' : 'เพิ่มสินค้าแล้ว'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+function toggleProduct(id, on){
+  state.busy = 'p:' + id; render();
+  call('staffSetProductActive', id, on).then(d => { state.data = d; toast(on ? 'แสดงในหน้าร้านแล้ว' : 'ซ่อนจากหน้าร้านแล้ว'); })
+    .catch(e => { toast(e.message, true); }).then(() => { state.busy = ''; render(); });
+}
+function deleteProduct(){
+  const e = state.edit;
+  if (!confirm('ลบสินค้า "' + e.p.name + '" ออกจากระบบ?\n\nออเดอร์เก่าที่มีสินค้านี้ยังอยู่ครบ ถ้าแค่ไม่อยากให้ลูกค้าเห็น ให้ใช้ "ซ่อน" แทน\n(กู้คืนได้ในหน้าประวัติการแก้ไข)')) return;
+  e.busy = true; render();
+  call('staffDeleteProduct', e.originalId).then(d => { state.data = d; state.edit = null; render(); toast('ลบสินค้าแล้ว กู้คืนได้ในหน้าประวัติการแก้ไข'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+
+// ---------------------------------------------------------------- แบรนด์
+
+function brandsView(){
+  const d = state.data, count = id => d.products.filter(p => p.brand === id).length;
+  return pageHead('แบรนด์', 'หน้าเฉพาะแบรนด์ (ใช้ทำ QR ของแบรนด์) = ลิงก์หน้าร้าน ต่อท้ายด้วย ?brand=รหัสแบรนด์',
+      `<button class="btn" onclick="editBrand(null)">${ic('plus', 17)}เพิ่มแบรนด์</button>`) +
+    (d.brands.length ? '<div class="pgrid">' + d.brands.map(b => `<div class="pcard bcard ${b.active ? '' : 'off'}">
+      <div class="img">${b.img ? `<img src="${esc(b.img)}" alt="" loading="lazy">` : `<div class="noimg">${ic('image', 24)}ไม่มีรูปหัวแบรนด์</div>`}
+        ${b.active ? '' : '<span class="pill tagb">ซ่อนอยู่</span>'}</div>
+      <div class="bd"><b>${esc(b.name)}</b><span class="sub">${esc(b.tag) || '&nbsp;'}</span>
+        <span class="note">${count(b.id)} สินค้า · ?brand=${esc(b.id)}</span>
+        <div class="ft bft"><label class="tg" title="แสดงทั้งแบรนด์ในหน้าร้าน" style="margin:0"><input type="checkbox" ${b.active ? 'checked' : ''} ${state.busy === 'b:' + b.id ? 'disabled' : ''} onchange="toggleBrand('${esc(b.id)}', this.checked)"><i></i>${state.busy === 'b:' + b.id ? '…' : b.active ? 'แสดงในหน้าร้าน' : 'ซ่อนทั้งแบรนด์'}</label>
+          <span class="bacts"><button class="btn sec sm" onclick="openBSale('${esc(b.id)}')">${ic('tag', 15)}ลดราคา</button>
+          <button class="btn sec sm" onclick="editBrand('${esc(b.id)}')">${ic('edit', 15)}แก้ไข</button></span></div>
+        ${(n => n ? `<span class="note salep">ลดราคาอยู่ ${n} สินค้า</span>` : '')(d.products.filter(p => p.brand === b.id && p.onSale).length)}</div></div>`).join('') + '</div>'
+    : '<div class="empty">ยังไม่มีแบรนด์</div>');
+}
+function toggleBrand(id, on){
+  if (!on && !confirm('ซ่อนทั้งแบรนด์? ลูกค้าจะไม่เห็นสินค้าทุกตัวในแบรนด์นี้ (เปิดคืนได้)')) return render();
+  state.busy = 'b:' + id; render();
+  call('staffSetBrandActive', id, on).then(d => { state.data = d; toast(on ? 'แสดงแบรนด์ในหน้าร้านแล้ว' : 'ซ่อนทั้งแบรนด์แล้ว'); })
+    .catch(e => { toast(e.message, true); }).then(() => { state.busy = ''; render(); });
+}
+/** ลดราคาทั้งแบรนด์เป็น % */
+function openBSale(id){ state.bsale = {brand:id, pct:'', start:'', end:'', label:CO_LABEL, err:'', busy:false}; render(); }
+function readBSale(){
+  const s = state.bsale;
+  ['pct','start','end'].forEach(k => { const el = $('bs_'+k); if (el) s[k] = el.value.trim(); });
+  const co = $('bs_company'); if (co) s.label = co.checked ? CO_LABEL : '';
+}
+function bsaleView(){
+  const s = state.bsale, d = state.data, b = d.brands.find(x => x.id === s.brand) || {name:s.brand};
+  const ps = d.products.filter(p => p.brand === s.brand && p.price != null), pct = toNum(s.pct), ok = pct > 0 && pct < 100;
+  const onSale = d.products.filter(p => p.brand === s.brand && p.sale != null).length;
+  const body = `<p class="note" style="margin:0 0 4px">ตั้งราคาพิเศษให้ทุกสินค้าในแบรนด์ที่มีราคาแล้ว (${ps.length} สินค้า) ทับราคาพิเศษเดิม · ย้อนกลับได้ในหน้าประวัติการแก้ไข</p>
+    <label for="bs_pct">ลดกี่ %</label><input type="text" id="bs_pct" inputmode="decimal" placeholder="เช่น 10" value="${esc(s.pct)}" oninput="readBSale();clearTimeout(window._bt);window._bt=setTimeout(()=>{render();const el=$('bs_pct');el.focus();el.setSelectionRange(el.value.length,el.value.length)},300)">
+    <label class="chk" style="margin-top:10px"><input type="checkbox" id="bs_company" ${s.label === CO_LABEL ? 'checked' : ''} onchange="readBSale();render()"><span><b>${CO_LABEL}</b><br><span class="note">ไม่จำกัดเวลา หน้าร้านขึ้นป้ายนี้ใต้ราคา</span></span></label>
+    ${s.label === CO_LABEL ? '' : `<div class="two"><div><label for="bs_start">ตั้งแต่ <span class="note">ว่าง = ทันที</span></label><input type="date" id="bs_start" value="${esc(s.start)}"></div>
+      <div><label for="bs_end">ถึง <span class="note">ว่าง = ไม่มีกำหนด</span></label><input type="date" id="bs_end" value="${esc(s.end)}"></div></div>`}
+    ${ok && ps.length ? `<div class="box"><b>ตัวอย่างราคาหลังลด</b>${ps.slice(0, 8).map(p => `<div class="prow"><span>${esc(p.name)}</span><span><s>${num(p.price)}</s> ${num(Math.round(p.price * (1 - pct / 100) * 100) / 100)}</span></div>`).join('')}${ps.length > 8 ? `<p class="note">และอีก ${ps.length - 8} สินค้า</p>` : ''}</div>` : ''}
+    ${s.err ? `<div class="err">${esc(s.err)}</div>` : ''}`;
+  const foot = `${onSale ? `<button class="btn danger" onclick="saveBSale(true)" ${s.busy ? 'disabled' : ''}>ยกเลิกราคาพิเศษทั้งแบรนด์</button>` : ''}
+    <div class="r"><button class="btn sec" onclick="set('bsale',null)">ปิด</button><button class="btn" onclick="saveBSale(false)" ${s.busy || !ok || !ps.length ? 'disabled' : ''}>${s.busy ? 'กำลังบันทึก…' : ok ? 'ลด ' + pct + '% ทั้งแบรนด์' : 'ลดราคาทั้งแบรนด์'}</button></div>`;
+  return modal('bsale', 'ลดราคาทั้งแบรนด์ ' + esc(b.name), body, foot);
+}
+function saveBSale(clear){
+  readBSale();
+  const s = state.bsale;
+  if (clear && !confirm('ยกเลิกราคาพิเศษของทุกสินค้าในแบรนด์นี้?')) return;
+  s.busy = true; s.err = ''; render();
+  call('staffBrandSale', s.brand, clear ? {clear:true} : {pct:s.pct, start:s.start, end:s.end, label:s.label}).then(d => {
+    state.data = d; state.bsale = null; state.hist = null; render(); toast(clear ? 'ยกเลิกราคาพิเศษทั้งแบรนด์แล้ว' : 'ตั้งราคาพิเศษทั้งแบรนด์แล้ว');
+  }).catch(e => { s.busy = false; s.err = e.message; render(); });
+}
+function editBrand(id){
+  const b = id ? state.data.brands.find(x => x.id === id) : null;
+  state.bedit = {isNew: !b, err:'', busy:false, image:null, preview: b ? b.img : '', p: b ? {...b} : {id:'', name:'', tag:'', active:true}};
+  render();
+}
+function readBEdit(){
+  const p = state.bedit.p;
+  ['id','name','tag','tagEn'].forEach(k => { const el = $('b_'+k); if (el && !el.disabled) p[k] = el.value; });
+  const a = $('b_active'); if (a) p.active = a.checked;
+}
+function brandEditView(){
+  const e = state.bedit, p = e.p, v = k => esc(p[k] == null ? '' : p[k]);
+  const body = `
+    <div class="upl" style="margin-top:4px"><div class="pv wide">${e.preview ? `<img src="${esc(e.preview)}" alt="">` : `<div class="noimg">${ic('image', 22)}</div>`}</div>
+      <div><span class="btn sec sm file">${ic('image', 15)}${e.preview ? 'เปลี่ยนรูป' : 'เลือกรูปหัวแบรนด์'}<input type="file" accept="image/jpeg,image/png" onchange="pickImage(this,'bedit')"></span>
+        <p class="note" style="margin:6px 0 0">แนวนอน JPG/PNG ไม่เกิน 3 MB ไม่บังคับ</p></div></div>
+    <div class="two"><div><label for="b_name">ชื่อแบรนด์</label><input type="text" id="b_name" maxlength="60" value="${v('name')}"></div>
+      <div><label for="b_id">รหัสแบรนด์ <span class="note">${e.isNew ? 'a-z ตัวเล็ก ตัวเลข -' : 'เปลี่ยนไม่ได้'}</span></label><input type="text" id="b_id" maxlength="30" value="${v('id')}" ${e.isNew ? '' : 'disabled'}></div></div>
+    <div class="two"><div><label for="b_tag">ข้อความใต้ชื่อแบรนด์</label><input type="text" id="b_tag" maxlength="80" placeholder="เช่น PROMPT SKIN" value="${v('tag')}"></div>
+      <div><label for="b_tagEn">ภาษาอังกฤษ <span class="note">ไม่บังคับ</span></label><input type="text" id="b_tagEn" maxlength="80" placeholder="ว่าง = ใช้ข้อความไทย" value="${v('tagEn')}"></div></div>
+    <div class="box"><label class="tg" style="margin:0"><input type="checkbox" id="b_active" ${p.active ? 'checked' : ''}><i></i>แสดงในหน้าร้าน <span class="note">(ซ่อน = ซ่อนสินค้าทั้งแบรนด์)</span></label></div>
+    ${moveBox(e)}
+    ${e.err ? `<div class="err">${esc(e.err)}</div>` : ''}`;
+  const foot = `${e.isNew ? '' : `<button class="btn danger" onclick="deleteBrand()" ${e.busy ? 'disabled' : ''}>${ic('trash', 16)}ลบ</button>`}
+    <div class="r"><button class="btn sec" onclick="set('bedit',null)">ยกเลิก</button><button class="btn" onclick="saveBrand()" ${e.busy ? 'disabled' : ''}>${e.busy ? 'กำลังบันทึก…' : 'บันทึก'}</button></div>`;
+  return modal('bedit', e.isNew ? 'เพิ่มแบรนด์' : 'แก้ไขแบรนด์', body, foot);
+}
+function moveBox(e){
+  if (e.isNew) return '';
+  const d = state.data, n = d.products.filter(x => x.brand === e.p.id).length, others = d.brands.filter(b => b.id !== e.p.id);
+  if (!n || !others.length) return '';
+  return `<div class="box"><b style="font-size:14px">ย้ายสินค้าทั้งหมด ${n} รายการไปแบรนด์อื่น</b>
+    <div style="display:flex;gap:8px;margin-top:8px"><select id="b_moveto" style="flex:1">${others.map(b => `<option value="${esc(b.id)}">${esc(b.name)}</option>`).join('')}</select>
+      <button class="btn sec" onclick="moveAll()" ${e.busy ? 'disabled' : ''}>${ic('move', 16)}ย้าย</button></div></div>`;
+}
+function moveAll(){
+  readBEdit();
+  const e = state.bedit, to = $('b_moveto').value, toName = (state.data.brands.find(b => b.id === to) || {}).name;
+  if (!confirm('ย้ายสินค้าทั้งหมดของ ' + e.p.name + ' ไปแบรนด์ ' + toName + '?\n(ย้อนกลับได้ในหน้าประวัติการแก้ไข)')) return;
+  e.busy = true; e.err = ''; render();
+  call('staffMoveBrandProducts', e.p.id, to).then(d => { state.data = d; e.busy = false; render(); toast('ย้ายสินค้าไป ' + toName + ' แล้ว'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+function saveBrand(){
+  readBEdit();
+  const e = state.bedit, p = e.p;
+  p.id = String(p.id).trim().toLowerCase();
+  if (!/^[a-z0-9-]{1,30}$/.test(p.id)) { e.err = 'รหัสแบรนด์ใช้ได้เฉพาะ a-z ตัวเล็ก ตัวเลข และ -'; return render(); }
+  if (!String(p.name).trim()) { e.err = 'กรุณากรอกชื่อแบรนด์'; return render(); }
+  e.busy = true; e.err = ''; render();
+  call('staffSaveBrand', {...p, isNew: e.isNew}, e.image).then(d => { state.data = d; state.bedit = null; render(); toast(e.isNew ? 'เพิ่มแบรนด์แล้ว' : 'บันทึกแบรนด์แล้ว'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+function deleteBrand(){
+  const e = state.bedit;
+  if (!confirm('ลบแบรนด์ "' + e.p.name + '"?\n(กู้คืนได้ในหน้าประวัติการแก้ไข)')) return;
+  e.busy = true; render();
+  call('staffDeleteBrand', e.p.id).then(d => { state.data = d; state.bedit = null; render(); toast('ลบแบรนด์แล้ว'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+
+// ---------------------------------------------------------------- คลังใบเสร็จ / ใบกำกับภาษี
+
+/** เอกสารทั้งหมดจากออเดอร์: RC = ใบเสร็จ/ใบกำกับอย่างย่อ, IV = ใบกำกับเต็มรูป */
+function allDocs(){
+  const out = [];
+  orders().forEach(o => {
+    const buyer = [o.form.name, o.form.company].filter(Boolean).join(' · ');
+    if (o.rc && o.status === 'PAID') out.push({kind:'RC', no:o.rc.no, date:o.rc.date || o.paidAt || o.ts, order:o.no, buyer, tid:'',
+      total:o.total, vat:o.vat, before:o.subtotal, status:o.rc.status === 'REPLACED' ? 'REPLACED' : 'ISSUED', ref:o.rc.replacedBy,
+      note: o.rc.wanted === 'yes' ? 'ลูกค้ารับ' + (o.rc.emailed ? ' · ส่งอีเมลแล้ว' : '') : o.rc.wanted === 'no' ? 'ลูกค้าไม่รับ' : 'ลูกค้ายังไม่ได้เลือก'});
+    if (o.inv) out.push({kind:'IV', no:o.inv.no, date:o.inv.date, order:o.no, buyer:o.inv.name, tid:o.inv.tid + (o.inv.branch ? ' · ' + o.inv.branch : ''),
+      total:o.inv.total, vat:o.inv.vat, before:o.inv.beforeVat, status:'ISSUED', note:'ใบกำกับภาษีเต็มรูป'});
+  });
+  return out.sort((a, b) => b.date - a.date || (a.no < b.no ? 1 : -1));
+}
+const ym = ms => { const d = new Date(ms); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+const ymLabel = k => { const [y, m] = k.split('-'); return TM[+m - 1] + ' ' + (+y + 543); };
+function docsFiltered(){
+  const q = (state.dq || '').trim().toLowerCase(), kind = state.dkind || 'all', mon = state.dmon || 'all';
+  return allDocs().filter(x => (kind === 'all' || x.kind === kind) && (mon === 'all' || ym(x.date) === mon) &&
+    (!q || [x.no, x.order, x.buyer, x.tid].join(' ').toLowerCase().includes(q)));
+}
+function docsView(){
+  const all = allDocs(), ds = docsFiltered(), live = ds.filter(x => x.status !== 'REPLACED');
+  const months = [...new Set(all.map(x => ym(x.date)))].sort().reverse();
+  const missing = orders().filter(o => o.status === 'PAID' && !o.rc).length;
+  const sum = k => live.reduce((a, x) => a + x[k], 0);
+  const kinds = [['all', 'ทั้งหมด'], ['RC', 'ใบเสร็จ / ใบกำกับอย่างย่อ'], ['IV', 'ใบกำกับภาษีเต็มรูป']];
+  return pageHead('คลังใบเสร็จ / ใบกำกับภาษี', 'รวมเอกสารทุกใบที่ระบบออก ค้นหา เปิดดู พิมพ์ซ้ำ และพิมพ์รายงานภาษีขายรายเดือน',
+      `<button class="btn" onclick="set('docReport',true)" ${ds.length ? '' : 'disabled'}>${ic('doc', 17)}พิมพ์รายงาน</button>`) +
+    (missing ? `<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div><b>ออเดอร์ชำระแล้วที่ยังไม่มีใบเสร็จ ${missing} รายการ</b><br><span class="note">ออเดอร์ก่อนเปิดระบบใบเสร็จ กดเพื่อออกให้ครบ</span></div>
+      <button class="btn sec" onclick="backfillRc()" ${state.busy === 'bf' ? 'disabled' : ''}>${state.busy === 'bf' ? 'กำลังออก…' : 'ออกใบเสร็จให้ครบ'}</button></div>` : '') +
+    `<div class="toolbar"><div class="chips">${kinds.map(k => `<button class="chip ${(state.dkind || 'all') === k[0] ? 'on' : ''}" onclick="set('dkind','${k[0]}')">${k[1]}<span class="c">${k[0] === 'all' ? all.length : all.filter(x => x.kind === k[0]).length}</span></button>`).join('')}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><select id="dmon" style="width:auto" onchange="set('dmon',this.value)"><option value="all">ทุกเดือน</option>
+        ${months.map(m => `<option value="${m}" ${state.dmon === m ? 'selected' : ''}>${ymLabel(m)}</option>`).join('')}</select>
+      <label class="search" style="margin:0">${ic('search', 16)}<input type="text" id="dq" placeholder="เลขที่ ออเดอร์ ชื่อผู้ซื้อ" value="${esc(state.dq || '')}" oninput="state.dq=this.value;clearTimeout(window._dt);window._dt=setTimeout(()=>{render();const el=$('dq');el.focus();el.setSelectionRange(el.value.length,el.value.length)},250)"></label></div></div>
+    <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      <div class="stat"><div class="si m">${ic('doc')}</div><div><span>เอกสาร</span><b>${ds.length}</b><small>ใบ${ds.length - live.length ? ' · ยกเลิก ' + (ds.length - live.length) : ''}</small></div></div>
+      <div class="stat"><div class="si s">${ic('cash')}</div><div><span>ยอดรวม (ไม่นับใบที่ยกเลิก)</span><b>${num(sum('total'))}</b><small>บาท</small></div></div>
+      <div class="stat"><div class="si c">${ic('summary')}</div><div><span>ภาษีขาย (VAT)</span><b>${num(sum('vat'))}</b><small>มูลค่าก่อน VAT ${num(sum('before'))}</small></div></div></div>` +
+    (ds.length ? '<div class="rows">' + ds.slice(0, 300).map(x => `<div class="row ${x.status === 'REPLACED' ? 'off' : ''}">
+        <div class="dot ${x.kind === 'IV' ? 'c' : 'm'}">${ic('doc', 17)}</div>
+        <div class="main"><b class="cpcode">${esc(x.no)}</b><span>${x.kind === 'IV' ? 'ใบกำกับภาษีเต็มรูป' : 'ใบเสร็จ / ใบกำกับภาษีอย่างย่อ'} · ${esc(x.buyer || '-')}${x.tid ? ' · ' + esc(x.tid) : ''}</span>
+          <span class="note">${thDate(new Date(x.date))} ${hm(new Date(x.date))} · ออเดอร์ ${esc(x.order)} · ${esc(x.note)}</span></div>
+        <div class="side-r"><b class="num">${num(x.total)}</b>${x.status === 'REPLACED' ? `<span class="pill">ยกเลิก · แทนด้วย ${esc(x.ref)}</span>` : ''}
+          <button class="btn sec sm" onclick="openDoc('${x.kind}','${esc(x.order)}')" ${state.busy === 'rc' + x.order ? 'disabled' : ''}>${ic('doc', 15)}ดู / พิมพ์</button></div></div>`).join('') + '</div>' +
+      (ds.length > 300 ? `<p class="note">แสดง 300 ใบล่าสุด เลือกเดือนเพื่อดูเพิ่ม</p>` : '')
+    : `<div class="empty">${all.length ? 'ไม่พบเอกสารที่ค้นหา' : 'ยังไม่มีเอกสาร ระบบออกใบเสร็จให้เองเมื่อลูกค้าชำระเงินสำเร็จ'}</div>`) +
+    '<p class="note" style="margin-top:14px">ใบเสร็จที่ถูกแทนด้วยใบกำกับเต็มรูปแสดงว่า "ยกเลิก" และไม่นับซ้ำในยอดรวม · ข้อมูลดิบอยู่ในแท็บ Receipts และ Invoices ของ Google Sheet (ดาวน์โหลดเป็น Excel ได้จากเมนู ไฟล์ → ดาวน์โหลด)</p>';
+}
+function openDoc(kind, orderNo){ if (kind === 'IV') openInv(orderNo); else openRcv(orderNo); }
+function backfillRc(){
+  state.busy = 'bf'; render();
+  call('staffBackfillReceipts').then(d => { state.data = d; toast('ออกใบเสร็จครบแล้ว'); })
+    .catch(e => toast(e.message, true)).then(() => { state.busy = ''; render(); });
+}
+/** รายงานภาษีขาย (ตามตัวกรองที่เลือก) สำหรับพิมพ์ / บันทึก PDF */
+function docReportView(){
+  const ds = docsFiltered().slice().reverse(), S = state.data.seller, live = ds.filter(x => x.status !== 'REPLACED');
+  const sum = k => live.reduce((a, x) => a + x[k], 0);
+  const title = (state.dmon && state.dmon !== 'all' ? 'เดือน ' + ymLabel(state.dmon) : 'ทุกเดือน') +
+    ({RC:' · เฉพาะใบเสร็จ / ใบกำกับอย่างย่อ', IV:' · เฉพาะใบกำกับภาษีเต็มรูป'}[state.dkind] || '');
+  return `<div class="ov" onclick="if(event.target===this)set('docReport',null)"><div class="dlg wide">
+    <div class="invbar"><button class="btn sec" onclick="set('docReport',null)">ปิด</button><button class="btn" onclick="window.print()">${ic('doc', 16)}พิมพ์ / บันทึก PDF</button></div>
+    <div class="inv rpt"><h2 style="margin:0">รายงานภาษีขาย</h2><p>${esc(title)}</p>
+      <p>${esc(S.name)} · เลขประจำตัวผู้เสียภาษี ${esc(S.tid)} · ${esc(S.branch)}</p>
+      <table><tr><th>ลำดับ</th><th>วันที่</th><th>เลขที่</th><th>ผู้ซื้อ</th><th>เลขผู้เสียภาษีผู้ซื้อ</th><th>มูลค่าก่อน VAT</th><th>VAT</th><th>รวม</th></tr>
+      ${ds.map((x, i) => `<tr${x.status === 'REPLACED' ? ' style="color:#999"' : ''}><td>${i + 1}</td><td>${thDate(new Date(x.date))}</td><td>${esc(x.no)}</td>
+        <td>${esc(x.buyer || 'ลูกค้าทั่วไป')}${x.status === 'REPLACED' ? ' (ยกเลิก แทนด้วย ' + esc(x.ref) + ')' : ''}</td><td>${esc(x.tid || '-')}</td>
+        <td>${x.status === 'REPLACED' ? '-' : num(x.before)}</td><td>${x.status === 'REPLACED' ? '-' : num(x.vat)}</td><td>${x.status === 'REPLACED' ? '-' : num(x.total)}</td></tr>`).join('')}
+      <tr class="g"><td colspan="5">รวม ${live.length} ใบ</td><td>${num(sum('before'))}</td><td>${num(sum('vat'))}</td><td>${num(sum('total'))}</td></tr></table>
+      <p style="margin-top:8px;color:#555">พิมพ์เมื่อ ${thDate(new Date())} ${hm(new Date())} · ไม่นับใบที่ยกเลิก</p></div></div></div>`;
+}
+
+// ---------------------------------------------------------------- คูปองส่วนลด
+
+function loadCoupons(){
+  state.cpBusy = true;
+  call('staffCoupons').then(c => { state.coupons = c; }).catch(e => { state.err = e.message; state.coupons = []; })
+    .then(() => { state.cpBusy = false; render(); });
+}
+const cpWhen = c => [c.start ? 'เริ่ม ' + c.start : '', c.end ? 'ถึง ' + c.end : ''].filter(Boolean).join(' · ') || 'ไม่มีวันหมดอายุ';
+function cpState(c){
+  const d = new Date(), today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  if (!c.active) return ['ปิดอยู่', ''];
+  if (c.end && c.end < today) return ['หมดอายุ', 'EXPIRED'];
+  if (c.start && c.start > today) return ['ยังไม่เริ่ม', 'PENDING'];
+  if (c.limit && c.used >= c.limit) return ['ใช้ครบแล้ว', 'EXPIRED'];
+  return ['ใช้ได้', 'PAID'];
+}
+function couponsView(){
+  const head = pageHead('คูปองส่วนลด', 'ลูกค้ากรอกโค้ดในหน้าตะกร้า · ระบบตรวจเงื่อนไขและหักส่วนลดให้เอง',
+    `<button class="btn" onclick="editCoupon(null)">${ic('plus', 17)}สร้างคูปอง</button>`);
+  if (!state.coupons){ if (!state.cpBusy) setTimeout(loadCoupons, 0); return head + loading(); }
+  const cs = state.coupons;
+  return head + (cs.length ? '<div class="rows">' + cs.map(c => { const [st, cls] = cpState(c), busy = state.busy === 'cp:' + c.code;
+      return `<div class="row"><div class="dot m">${ic('tag', 17)}</div>
+        <div class="main"><b class="cpcode">${esc(c.code)}</b><span>${esc(c.label)}</span>
+          <span class="note">${esc(cpWhen(c))} · ใช้แล้ว ${c.used}${c.limit ? ' / ' + c.limit : ''} ครั้ง${c.note ? ' · ' + esc(c.note) : ''}</span></div>
+        <div class="side-r"><span class="pill ${cls}">${st}</span>
+          <label class="tg" style="margin:0"><input type="checkbox" ${c.active ? 'checked' : ''} ${busy ? 'disabled' : ''} onchange="toggleCoupon('${esc(c.code)}', this.checked)"><i></i></label>
+          <button class="btn sec sm" onclick="editCoupon('${esc(c.code)}')">${ic('edit', 15)}แก้ไข</button></div></div>`; }).join('') + '</div>'
+    : '<div class="empty">ยังไม่มีคูปอง กด "สร้างคูปอง" เพื่อเริ่ม</div>') +
+    '<p class="note" style="margin-top:14px">นับสิทธิ์จากออเดอร์ที่ชำระแล้วและกำลังรอจ่าย ออเดอร์ที่หมดเวลาหรือยกเลิกจะคืนสิทธิ์ให้เอง · คูปองที่มีคนใช้แล้วลบไม่ได้ ใช้ปิดแทน</p>';
+}
+function editCoupon(code){
+  const c = code ? state.coupons.find(x => x.code === code) : null;
+  state.cedit = {isNew: !c, err:'', busy:false, c: c ? {...c, min: c.min || '', max: c.max || '', limit: c.limit || ''}
+    : {code:'', type:'amount', value:'', min:'', max:'', start:'', end:'', limit:'', active:true, note:''}};
+  render();
+}
+function readCEdit(){
+  const c = state.cedit.c;
+  ['code','value','min','max','start','end','limit','note'].forEach(k => { const el = $('c_'+k); if (el) c[k] = el.value.trim(); });
+  const t = document.querySelector('input[name=c_type]:checked'); if (t) c.type = t.value;
+  const a = $('c_active'); if (a) c.active = a.checked;
+}
+function cEditView(){
+  const e = state.cedit, c = e.c, v = k => esc(c[k] == null ? '' : c[k]), pctT = c.type === 'percent';
+  const body = `
+    <label for="c_code">โค้ด <span class="note">ตัวอักษรอังกฤษ ตัวเลข - _ (3–20 ตัว)</span></label>
+    <input type="text" id="c_code" maxlength="20" style="text-transform:uppercase" placeholder="เช่น GENIO100" value="${v('code')}" ${e.isNew ? '' : 'disabled'}>
+    <label>ชนิดส่วนลด</label>
+    <div class="seg"><label><input type="radio" name="c_type" value="amount" ${pctT ? '' : 'checked'} onchange="readCEdit();render()"><span>ลดเป็นบาท</span></label>
+      <label><input type="radio" name="c_type" value="percent" ${pctT ? 'checked' : ''} onchange="readCEdit();render()"><span>ลดเป็น %</span></label></div>
+    <div class="two"><div><label for="c_value">${pctT ? 'ลดกี่ %' : 'ลดกี่บาท'}</label><input type="text" id="c_value" inputmode="decimal" placeholder="${pctT ? 'เช่น 10' : 'เช่น 100'}" value="${v('value')}"></div>
+      ${pctT ? `<div><label for="c_max">ลดสูงสุด (บาท) <span class="note">ไม่บังคับ</span></label><input type="text" id="c_max" inputmode="decimal" placeholder="ไม่จำกัด" value="${v('max')}"></div>`
+        : `<div><label for="c_min">ซื้อขั้นต่ำ (บาท) <span class="note">ไม่บังคับ</span></label><input type="text" id="c_min" inputmode="decimal" placeholder="ไม่มี" value="${v('min')}"></div>`}</div>
+    ${pctT ? `<label for="c_min">ซื้อขั้นต่ำ (บาท) <span class="note">ไม่บังคับ</span></label><input type="text" id="c_min" inputmode="decimal" placeholder="ไม่มี" value="${v('min')}">` : ''}
+    <div class="two"><div><label for="c_start">วันเริ่ม <span class="note">ว่าง = ใช้ได้เลย</span></label><input type="date" id="c_start" value="${v('start')}"></div>
+      <div><label for="c_end">ใช้ได้ถึง <span class="note">ว่าง = ไม่หมดอายุ</span></label><input type="date" id="c_end" value="${v('end')}"></div></div>
+    <label for="c_limit">จำนวนสิทธิ์ทั้งหมด <span class="note">ว่าง = ไม่จำกัด</span></label><input type="text" id="c_limit" inputmode="numeric" placeholder="เช่น 50" value="${v('limit')}">
+    <label for="c_note">หมายเหตุ <span class="note">ลูกค้าไม่เห็น</span></label><input type="text" id="c_note" maxlength="200" placeholder="เช่น แจกงานสัมมนา ต.ค." value="${v('note')}">
+    <div class="box"><label class="tg" style="margin:0"><input type="checkbox" id="c_active" ${c.active ? 'checked' : ''}><i></i>เปิดใช้งาน</label></div>
+    ${e.err ? `<div class="err">${esc(e.err)}</div>` : ''}`;
+  const foot = `${!e.isNew ? `<button class="btn danger" onclick="deleteCoupon()" ${e.busy ? 'disabled' : ''}>${ic('trash', 16)}ลบ</button>` : ''}
+    <div class="r"><button class="btn sec" onclick="set('cedit',null)">ยกเลิก</button><button class="btn" onclick="saveCoupon()" ${e.busy ? 'disabled' : ''}>${e.busy ? 'กำลังบันทึก…' : 'บันทึก'}</button></div>`;
+  return modal('cedit', e.isNew ? 'สร้างคูปอง' : 'แก้ไขคูปอง ' + esc(c.code), body, foot);
+}
+function saveCoupon(){
+  readCEdit();
+  const e = state.cedit, c = e.c;
+  if (!/^[A-Za-z0-9_-]{3,20}$/.test(c.code)) { e.err = 'โค้ดใช้ตัวอักษรอังกฤษ ตัวเลข - หรือ _ ยาว 3–20 ตัว'; return render(); }
+  if (!(Number(String(c.value).replace(/,/g, '')) > 0)) { e.err = 'กรอกมูลค่าส่วนลด'; return render(); }
+  e.busy = true; e.err = ''; render();
+  call('staffSaveCoupon', {...c, isNew: e.isNew}).then(cs => { state.coupons = cs; state.cedit = null; render(); toast(e.isNew ? 'สร้างคูปอง ' + c.code.toUpperCase() + ' แล้ว' : 'บันทึกแล้ว'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+function toggleCoupon(code, on){
+  state.busy = 'cp:' + code; render();
+  call('staffSetCouponActive', code, on).then(cs => { state.coupons = cs; toast(on ? 'เปิดคูปองแล้ว' : 'ปิดคูปองแล้ว'); })
+    .catch(e => toast(e.message, true)).then(() => { state.busy = ''; render(); });
+}
+function deleteCoupon(){
+  const e = state.cedit;
+  if (!confirm('ลบคูปอง ' + e.c.code + '?')) return;
+  e.busy = true; render();
+  call('staffDeleteCoupon', e.c.code).then(cs => { state.coupons = cs; state.cedit = null; render(); toast('ลบคูปองแล้ว'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+
+// ---------------------------------------------------------------- ประวัติและย้อนกลับ
+
+function loadHist(){
+  state.histBusy = true;
+  call('staffHistory').then(h => { state.hist = h; }).catch(e => { state.err = e.message; state.hist = []; })
+    .then(() => { state.histBusy = false; render(); });
+}
+function histIcon(a){
+  if (/^ย้อนกลับ/.test(a)) return ['undo', 's'];
+  if (/ลบ|ปิดบัญชี|ปฏิเสธ/.test(a)) return ['trash', 'b'];
+  if (/เพิ่ม|สร้าง|อนุมัติ/.test(a)) return ['plus', 'm'];
+  if (/ย้าย/.test(a)) return ['move', 's'];
+  if (/PIN|พนักงาน|สิทธิ์/.test(a)) return ['key', ''];
+  return ['edit', 'c'];
+}
+function historyView(){
+  const head = pageHead('ประวัติการแก้ไข', 'การเพิ่ม แก้ ซ่อน ย้าย ลบ สินค้าและแบรนด์ พร้อมชื่อคนทำ · กด "ย้อนกลับ" เพื่อคืนค่าเดิม');
+  if (!state.hist){ if (!state.histBusy) setTimeout(loadHist, 0); return head + loading(); }
+  const h = state.hist;
+  return head + (h.length ? '<div class="rows">' + h.map(x => { const [i, c] = histIcon(x.action);
+      return `<div class="row"><div class="dot ${c}">${ic(i, 17)}</div>
+        <div class="main"><b>${esc(x.action)}</b><span class="note">${esc(x.summary)}</span><span class="note">${when(x.at)}${x.by ? ' · โดย ' + esc(x.by) : ''}</span></div>
+        <div class="side-r">${x.undone ? '<span class="pill">ย้อนแล้ว</span>' : !x.undoable ? '' : `<button class="btn sec sm" onclick="undo('${esc(x.id)}')" ${state.histBusy ? 'disabled' : ''}>${ic('undo', 15)}ย้อนกลับ</button>`}</div></div>`; }).join('') + '</div>'
+    : '<div class="empty">ยังไม่มีประวัติ</div>') +
+    '<p class="note" style="margin-top:14px">ถ้าแก้รายการเดียวกันต่อหลังจากนั้น ต้องย้อนรายการที่ใหม่กว่าก่อน · การย้อนกลับก็ถูกบันทึก จึงกดย้อนอีกครั้งเพื่อทำซ้ำได้ · แสดง 100 รายการล่าสุด</p>';
+}
+function undo(id){
+  const x = state.hist.find(h => h.id === id);
+  if (!confirm('ย้อนกลับ "' + x.action + ' · ' + x.summary + '"?')) return;
+  state.histBusy = true; state.err = ''; render();
+  call('staffUndo', id).then(d => { state.data = d; toast('ย้อนกลับแล้ว'); }).catch(e => { toast(e.message, true); })
+    .then(() => { state.histBusy = false; loadHist(); });
+}
+
+// ---------------------------------------------------------------- PIN
+
+function pinView(){
+  const e = state.pin;
+  const body = `<label for="p_old">PIN เดิม</label><input type="password" id="p_old" inputmode="numeric" maxlength="6">
+    <div class="two"><div><label for="p_new">PIN ใหม่</label><input type="password" id="p_new" inputmode="numeric" maxlength="6" placeholder="ตัวเลข 6 หลัก"></div>
+      <div><label for="p_new2">ยืนยัน PIN ใหม่</label><input type="password" id="p_new2" inputmode="numeric" maxlength="6" onkeydown="if(event.key==='Enter')changePin()"></div></div>
+    <p class="note" style="margin:8px 0 0">เปลี่ยนแล้ว เครื่องอื่นที่ล็อกอินชื่อนี้อยู่จะถูกออกจากระบบ</p>
+    ${e.err ? `<div class="err">${esc(e.err)}</div>` : ''}`;
+  return modal('pin', 'เปลี่ยน PIN', body, `<div class="r"><button class="btn sec" onclick="set('pin',null)">ยกเลิก</button><button class="btn" onclick="changePin()" ${e.busy ? 'disabled' : ''}>${e.busy ? 'กำลังบันทึก…' : 'บันทึก PIN'}</button></div>`, 'sm');
+}
+function changePin(){
+  const e = state.pin, o = $('p_old').value.trim(), n = $('p_new').value.trim(), n2 = $('p_new2').value.trim();
+  if (!/^\d{6}$/.test(n)) { e.err = 'PIN ต้องเป็นตัวเลข 6 หลัก'; return render(); }
+  if (n !== n2) { e.err = 'PIN ใหม่สองช่องไม่ตรงกัน'; return render(); }
+  e.busy = true; e.err = ''; render();
+  call('staffChangePin', o, n, LSR.get()).then(d => { state.data = d; state.pin = null; render(); toast('เปลี่ยน PIN เรียบร้อย'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+
+// ---------------------------------------------------------------- พนักงาน (ผู้ดูแล)
+
+const ST_TH = {pending:'รออนุมัติ', active:'ใช้งาน', disabled:'ปิดบัญชี', reset:'ถูกปฏิเสธ'};
+function usersView(){
+  const head = pageHead('พนักงาน', 'อนุมัติบัญชีใหม่และคำขอลืมรหัส · ควรยืนยันกับตัวพนักงานก่อนกดอนุมัติ');
+  if (!state.users){ if (state.busy !== 'users') { state.busy = 'users'; call('staffUsers').then(u => { state.users = u; }).catch(e => { state.err = e.message; state.users = []; }).then(() => { state.busy = ''; render(); }); }
+    return head + loading(); }
+  const pend = state.users.filter(u => u.status === 'pending'), rest = state.users.filter(u => u.status !== 'pending'), b = state.busy;
+  return head + (pend.length ? `<h2>รออนุมัติ ${pend.length}</h2><div class="rows">` +
+      pend.map(u => `<div class="row"><div class="dot ${u.approvedBy ? 's' : 'c'}">${ic(u.approvedBy ? 'key' : 'plus', 17)}</div>
+        <div class="main"><b>${esc(u.name)}</b><span class="note">${u.approvedBy ? 'ลืมรหัส ตั้ง PIN ใหม่' : 'ขอสร้างบัญชีใหม่'} · ${when(u.createdAt)}</span></div>
+        <div class="side-r"><button class="btn sec sm" onclick="manage('${esc(u.name)}','reject')" ${b ? 'disabled' : ''}>ปฏิเสธ</button>
+          <button class="btn ok sm" onclick="manage('${esc(u.name)}','approve')" ${b ? 'disabled' : ''}>${ic('check', 15)}อนุมัติ</button></div></div>`).join('') + '</div>'
+      : '<div class="empty" style="padding:16px">ไม่มีคำขอรออนุมัติ</div>') +
+    `<h2>บัญชีทั้งหมด</h2><div class="rows">
+      <div class="row"><div class="ava">T</div><div class="main"><b>TIBD</b><span class="note">ผู้ดูแลหลัก · PIN อยู่ใน Script Properties (STAFF_PIN)</span></div><div class="side-r"><span class="pill ok">ผู้ดูแล</span></div></div>` +
+    rest.map(u => `<div class="row"><div class="ava" style="background:${u.status === 'active' ? 'var(--ink2)' : '#b9b6ad'}">${initial(u.name)}</div>
+      <div class="main"><b>${esc(u.name)}</b><span class="note">${u.lastLogin ? 'เข้าล่าสุด ' + when(u.lastLogin) : 'ยังไม่เคยเข้า'}${u.approvedBy ? ' · อนุมัติโดย ' + esc(u.approvedBy) : ''}</span></div>
+      <div class="side-r">${u.role === 'admin' ? '<span class="pill ok">ผู้ดูแล</span>' : '<span class="pill info">พนักงาน</span>'}
+        ${u.status === 'active' ? '' : `<span class="pill bad">${ST_TH[u.status] || u.status}</span>`}
+        <button class="btn sec sm" onclick="set('uedit',{name:'${esc(u.name)}'})">จัดการ</button></div></div>`).join('') + '</div>' +
+    '<p class="note" style="margin-top:14px">พนักงานกด "สร้างบัญชี" หรือ "ลืมรหัส" ที่หน้าเข้าสู่ระบบ แล้วคำขอจะมาขึ้นที่นี่ · ผู้ดูแล = อนุมัติและจัดการพนักงานได้</p>';
+}
+function userEditView(){
+  const u = state.users.find(x => x.name === state.uedit.name), e = state.uedit, b = state.busy;
+  if (!u) return '';
+  const me = state.data.me.name === u.name;
+  const body = `<label for="u_role">สิทธิ์</label><div style="display:flex;gap:8px"><select id="u_role" style="flex:1">
+      <option value="staff" ${u.role !== 'admin' ? 'selected' : ''}>พนักงาน</option><option value="admin" ${u.role === 'admin' ? 'selected' : ''}>ผู้ดูแล (อนุมัติและจัดการพนักงานได้)</option></select>
+      <button class="btn sec" onclick="manage('${esc(u.name)}','role',$('u_role').value)" ${b ? 'disabled' : ''}>บันทึก</button></div>
+    ${me ? '' : `<div class="box">${u.status === 'active' ? `<b style="font-size:14px">ปิดบัญชี</b><p class="note" style="margin:2px 0 10px">ใช้เมื่อพนักงานลาออก ออกจากระบบทุกเครื่องทันที เปิดคืนได้</p>
+        <button class="btn danger" onclick="manage('${esc(u.name)}','disable')" ${b ? 'disabled' : ''}>ปิดบัญชี</button>` : ''}
+      ${u.status === 'disabled' ? `<b style="font-size:14px">บัญชีนี้ถูกปิดอยู่</b><p class="note" style="margin:2px 0 10px">เปิดคืนแล้วเข้าด้วย PIN เดิมได้</p>
+        <button class="btn ok" onclick="manage('${esc(u.name)}','enable')" ${b ? 'disabled' : ''}>เปิดบัญชีคืน</button>` : ''}</div>`}
+    ${e.err ? `<div class="err">${esc(e.err)}</div>` : ''}`;
+  return modal('uedit', esc(u.name), body, '', 'sm', 'สถานะ: ' + (ST_TH[u.status] || u.status));
+}
+function manage(name, act, role){
+  const msg = {approve:'อนุมัติ ' + name + ' ให้เข้าใช้งาน?', reject:'ปฏิเสธคำขอของ ' + name + '?', disable:'ปิดบัญชี ' + name + '?',
+    enable:'เปิดบัญชี ' + name + ' คืน?'}[act];
+  if (msg && !confirm(msg)) return;
+  const done = {approve:'อนุมัติ ' + name + ' แล้ว', reject:'ปฏิเสธคำขอแล้ว', disable:'ปิดบัญชีแล้ว', enable:'เปิดบัญชีคืนแล้ว', role:'บันทึกสิทธิ์แล้ว'}[act];
+  state.busy = 'manage'; render();
+  call('staffManageUser', name, act, role).then(u => { state.users = u; if (state.uedit) state.uedit.err = ''; toast(done); return call('staffData').then(d => { state.data = d; }); })
+    .catch(err => { if (state.uedit) state.uedit.err = err.message; else toast(err.message, true); })
+    .then(() => { state.busy = ''; render(); });
+}
+
+// ---------------------------------------------------------------- แจ้งปัญหา
+
+const BUG_TH = {new:'ใหม่', doing:'กำลังแก้', fixed:'แก้แล้ว', closed:'ปิด'};
+const BUG_CLS = {new:'wait', doing:'info', fixed:'ok', closed:''};
+const BUG_CAT = {order:'ออเดอร์ / การชำระเงิน', invoice:'ใบกำกับภาษี', product:'สินค้า / แบรนด์', store:'หน้าร้านลูกค้า', account:'เข้าสู่ระบบ / บัญชี', other:'อื่น ๆ'};
+const BUG_URG = {urgent:['ด่วน','ใช้งานไม่ได้ ต้องแก้ทันที','bad'], normal:['ปกติ','ใช้ได้แต่มีปัญหา','wait'], idea:['ข้อเสนอแนะ','อยากให้ปรับปรุง','info']};
+/** อาการที่พบบ่อย กดแล้วเติมข้อความให้ */
+const BUG_QUICK = {
+  order:['สถานะไม่เปลี่ยนเป็นชำระแล้ว ทั้งที่ลูกค้าจ่ายแล้ว','ยอดเงินไม่ตรงกับที่ลูกค้าจ่าย','หาออเดอร์ไม่เจอ'],
+  invoice:['ออกใบกำกับภาษีไม่ได้','ข้อมูลในใบกำกับภาษีผิด','พิมพ์ / บันทึก PDF ไม่ได้'],
+  product:['บันทึกสินค้าไม่ได้','รูปสินค้าไม่ขึ้น','ราคาหรือชื่อสินค้าไม่ตรง'],
+  store:['ลูกค้ากดชำระเงินแล้วไม่ไปหน้า ChillPay','หน้าร้านโหลดช้า / ไม่ขึ้น','ลูกค้าหาสินค้าไม่เจอ'],
+  account:['เข้าสู่ระบบไม่ได้','ถูกออกจากระบบบ่อย','เปลี่ยน PIN ไม่ได้'],
+  other:['หน้าค้าง / โหลดไม่ขึ้น','กดปุ่มแล้วไม่มีอะไรเกิดขึ้น','ตัวหนังสือหรือปุ่มแสดงผิด']
+};
+const TAB_TH = {orders:'ออเดอร์', summary:'สรุปยอดขาย', products:'สินค้า', brands:'แบรนด์', history:'ประวัติ', users:'พนักงาน', bugs:'ปัญหาที่ได้รับแจ้ง'};
+const TAB_CAT = {orders:'order', summary:'order', products:'product', brands:'product', users:'account'};
+function bugContext(){
+  return [navigator.userAgent, 'จอ ' + screen.width + 'x' + screen.height, 'หน้าต่าง ' + innerWidth + 'x' + innerHeight]
+    .concat(ERRS.length ? ['error: ' + ERRS.join(' | ')] : []).join(' · ');
+}
+function openBug(orderNo){
+  state.navOpen = false;
+  state.bug = {err:'', busy:false, mine:null, sent:false, tab:'new', cat: orderNo ? 'order' : (TAB_CAT[state.sv] || 'other'), urg:'normal',
+    text:'', order: orderNo || '', image:null, preview:''};
+  render();
+  call('staffMyBugs').then(m => { if (state.bug) { state.bug.mine = m; render(); } }).catch(() => {});
+}
+/** เก็บค่าที่พิมพ์ไว้ก่อนวาดหน้าต่างใหม่ */
+function readBug(){
+  const e = state.bug, t = $('bug_text'), o = $('bug_order');
+  if (t) e.text = t.value; if (o) e.order = o.value;
+}
+function bugSet(k, v){ readBug(); state.bug[k] = v; render(); }
+function bugQuick(txt){ readBug(); const e = state.bug; e.text = e.text.trim() ? e.text.trim() + '\n' + txt : txt; render(); const t = $('bug_text'); if (t) { t.focus(); t.setSelectionRange(t.value.length, t.value.length); } }
+function bugPick(input){
+  readBug();
+  const f = input.files && input.files[0], e = state.bug;
+  if (!f) return;
+  if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { e.err = 'ภาพต้องเป็น JPG PNG หรือ WEBP'; return render(); }
+  if (f.size > 4 * 1024 * 1024) { e.err = 'ภาพใหญ่เกิน 4 MB'; return render(); }
+  const r = new FileReader();
+  r.onload = () => { const url = String(r.result); e.image = {type:f.type, data:url.slice(url.indexOf(',') + 1)}; e.preview = url; e.err = ''; render(); };
+  r.readAsDataURL(f);
+}
+function bugView(){
+  const e = state.bug;
+  const tabs = `<div class="seg" style="margin-bottom:12px">${[['new','แจ้งเรื่องใหม่'],['mine','เรื่องที่ฉันแจ้ง' + (e.mine ? ' (' + e.mine.length + ')' : '')]].map(x =>
+    `<button class="${e.tab === x[0] ? 'on' : ''}" onclick="bugSet('tab','${x[0]}')">${x[1]}</button>`).join('')}</div>`;
+  if (e.tab === 'mine') return modal('bug', 'แจ้งปัญหา', tabs + (!e.mine ? loading() : !e.mine.length ? '<p class="note">ยังไม่เคยแจ้ง</p>' :
+    '<div class="rows" style="box-shadow:none;border:1px solid var(--line)">' + e.mine.map(b => `<div class="row"><div class="main">
+      <span class="note">${BUG_CAT[b.category] || ''}${b.orderNo ? ' · ' + esc(b.orderNo) : ''} · ${when(b.at)}</span>
+      <span style="white-space:pre-line">${esc(b.text)}</span>
+      ${b.note ? `<span class="note" style="color:var(--mint-deep)">ผู้ดูแล: ${esc(b.note)}</span>` : ''}</div>
+      <div class="side-r"><span class="pill ${(BUG_URG[b.urgency] || [])[2] || ''}">${(BUG_URG[b.urgency] || ['ปกติ'])[0]}</span><span class="pill ${BUG_CLS[b.status] || ''}">${BUG_TH[b.status] || b.status}</span></div></div>`).join('') + '</div>'), '', '', 'แจ้งแล้วติดตามสถานะได้ที่นี่');
+  const ordersList = orders().slice(0, 60).map(o => `<option value="${esc(o.no)}">${esc((o.form.name || o.form.company || '') + ' · ' + baht(o.total))}</option>`).join('');
+  const body = tabs + (e.sent ? `<div class="box" style="margin:0 0 10px;background:var(--mint-soft);border-color:#bfe8d8;color:var(--mint-deep)">${ic('check', 16)} ส่งแล้ว ขอบคุณครับ ติดตามได้ที่ "เรื่องที่ฉันแจ้ง"</div>` : '') + `
+    <label>เกี่ยวกับ</label><div class="chips">${Object.keys(BUG_CAT).map(k => `<button class="chip ${e.cat === k ? 'on' : ''}" onclick="bugSet('cat','${k}')">${BUG_CAT[k]}</button>`).join('')}</div>
+    <label>ความเร่งด่วน</label><div class="urg">${Object.keys(BUG_URG).map(k => `<button class="${e.urg === k ? 'on ' + k : ''}" onclick="bugSet('urg','${k}')"><b>${BUG_URG[k][0]}</b><span>${BUG_URG[k][1]}</span></button>`).join('')}</div>
+    <label>เกิดอะไรขึ้น <span class="note">กดอาการด้านล่างเพื่อเติมข้อความ แล้วเพิ่มรายละเอียดได้</span></label>
+    <div class="chips" style="margin-bottom:8px">${(BUG_QUICK[e.cat] || []).map(q => `<button class="chip" onclick="bugQuick(${esc(JSON.stringify(q))})">+ ${esc(q)}</button>`).join('')}</div>
+    <textarea id="bug_text" style="min-height:96px" maxlength="2000" placeholder="กดอะไร แล้วเกิดอะไรขึ้น">${esc(e.text)}</textarea>
+    <div class="two"><div><label for="bug_order">เลขออเดอร์ที่เกี่ยวข้อง <span class="note">ไม่บังคับ</span></label>
+        <input type="text" id="bug_order" list="bug_orders" placeholder="OD-YYMMDD-001" value="${esc(e.order)}"><datalist id="bug_orders">${ordersList}</datalist></div>
+      <div><label>ภาพหน้าจอ <span class="note">ไม่บังคับ</span></label>
+        <div class="upl">${e.preview ? `<div class="pv" style="width:56px;height:56px"><img src="${esc(e.preview)}" alt="" style="object-fit:cover"></div>` : ''}
+          <span class="btn sec sm file">${ic('image', 15)}${e.preview ? 'เปลี่ยนภาพ' : 'แนบภาพ'}<input type="file" accept="image/jpeg,image/png,image/webp" onchange="bugPick(this)"></span>
+          ${e.preview ? `<button class="lk" onclick="bugSet('image',null);state.bug.preview='';render()">เอาออก</button>` : ''}</div></div></div>
+    <p class="note" style="margin:10px 0 0">ระบบแนบให้เอง: หน้าที่เปิดอยู่ (${esc(TAB_TH[state.sv] || state.sv)}) ชนิดเบราว์เซอร์ และ error ล่าสุด</p>
+    ${e.err ? `<div class="err">${esc(e.err)}</div>` : ''}`;
+  return modal('bug', 'แจ้งปัญหา', body, `<div class="r"><button class="btn sec" onclick="set('bug',null)">ปิด</button><button class="btn" onclick="sendBug()" ${e.busy ? 'disabled' : ''}>${e.busy ? 'กำลังส่ง…' : 'ส่งเรื่อง'}</button></div>`, '', 'บอกสั้น ๆ ว่าเกิดอะไรขึ้น ผู้ดูแลจะเห็นทันที');
+}
+function sendBug(){
+  readBug();
+  const e = state.bug, text = e.text.trim();
+  if (text.length < 5) { e.err = 'กรุณาอธิบายปัญหาสั้น ๆ หรือกดเลือกอาการด้านบน'; return render(); }
+  e.busy = true; e.err = ''; render();
+  call('staffReportBug', {text, tab: TAB_TH[state.sv] || state.sv, context: bugContext(), category: e.cat, urgency: e.urg, orderNo: e.order.trim(), image: e.image})
+    .then(m => { Object.assign(e, {busy:false, sent:true, mine:m, text:'', order:'', image:null, preview:''}); render(); toast('ส่งเรื่องแล้ว'); })
+    .catch(err => { e.busy = false; e.err = err.message; render(); });
+}
+
+// ---------------------------------------------------------------- ปัญหาที่ได้รับแจ้ง (ผู้ดูแล)
+
+function bugsView(){
+  const head = pageHead('ปัญหาที่ได้รับแจ้ง', 'เรื่องด่วนขึ้นก่อน · เปลี่ยนสถานะและเขียนหมายเหตุ คนแจ้งจะเห็นในหน้าต่างแจ้งปัญหาของตัวเอง');
+  if (!state.bugs){ if (state.busy !== 'bugs') { state.busy = 'bugs'; call('staffBugs').then(b => { state.bugs = b; }).catch(e => { state.err = e.message; state.bugs = []; }).then(() => { state.busy = ''; render(); }); }
+    return head + loading(); }
+  const f = state.bugFilter || 'open', fc = state.bugCat || 'all', isOpen = b => b.status === 'new' || b.status === 'doing';
+  const byStatus = b => f === 'all' || (f === 'open' ? isOpen(b) : b.status === f);
+  const rank = {urgent:0, normal:1, idea:2};
+  const list = state.bugs.filter(b => byStatus(b) && (fc === 'all' || b.category === fc))
+    .sort((a, b) => (isOpen(b) - isOpen(a)) || ((rank[a.urgency] ?? 1) - (rank[b.urgency] ?? 1)) || (b.at - a.at));
+  const n = k => state.bugs.filter(b => k === 'all' || (k === 'open' ? isOpen(b) : b.status === k)).length;
+  const nc = k => state.bugs.filter(b => byStatus(b) && (k === 'all' || b.category === k)).length;
+  const urgentOpen = state.bugs.filter(b => isOpen(b) && b.urgency === 'urgent').length;
+  return head + (urgentOpen ? `<div class="box" style="margin:0 0 14px;background:var(--bad-bg);border-color:#f1c4bf;color:var(--bad)">${ic('bugs', 16)} มีเรื่องด่วนที่ยังไม่เสร็จ ${urgentOpen} เรื่อง</div>` : '') +
+    `<div class="toolbar"><div class="chips">${[['open','ยังไม่เสร็จ'],['fixed','แก้แล้ว'],['closed','ปิด'],['all','ทั้งหมด']].map(x =>
+      `<button class="chip ${f === x[0] ? 'on' : ''}" onclick="set('bugFilter','${x[0]}')">${x[1]}<span class="c">${n(x[0])}</span></button>`).join('')}</div>
+      <select style="width:auto" onchange="set('bugCat', this.value)"><option value="all">ทุกหมวด (${nc('all')})</option>
+        ${Object.keys(BUG_CAT).map(k => `<option value="${k}" ${fc === k ? 'selected' : ''}>${BUG_CAT[k]} (${nc(k)})</option>`).join('')}</select></div>` +
+    (list.length ? list.map(b => `<div class="card" style="${b.urgency === 'urgent' && isOpen(b) ? 'border-left:4px solid var(--bad)' : ''}">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;gap:10px;align-items:center"><div class="ava" style="width:30px;height:30px;font-size:13px">${initial(b.by)}</div>
+          <div><b>${esc(b.by)}</b> <span class="note">· ${esc(b.id)}</span><br><span class="note">${when(b.at)} · หน้า ${esc(b.tab || '-')}</span></div></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${b.source === 'customer' ? '<span class="pill info">จากลูกค้า</span>' : ''}<span class="pill">${BUG_CAT[b.category] || 'อื่น ๆ'}</span>
+          <span class="pill ${(BUG_URG[b.urgency] || [])[2] || ''}">${(BUG_URG[b.urgency] || ['ปกติ'])[0]}</span>
+          <span class="pill ${BUG_CLS[b.status] || ''}">${BUG_TH[b.status] || b.status}</span></div></div>
+      <p style="margin:12px 0 8px;white-space:pre-line">${esc(b.text)}</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+        ${b.orderNo ? `<button class="lk" onclick="state.q='${esc(b.orderNo)}';state.range='all';state.st='all';set('sv','orders')">${ic('orders', 14)} ดูออเดอร์ ${esc(b.orderNo)}</button>` : ''}
+        ${b.hasImage ? `<button class="lk" onclick="showBugImage('${esc(b.id)}')">${ic('image', 14)} ดูภาพที่แนบ</button>` : ''}
+        <details><summary class="note" style="cursor:pointer">ข้อมูลเครื่อง</summary><p class="note" style="word-break:break-all;margin:6px 0 0">${esc(b.context || '-')}</p></details></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center;border-top:1px solid var(--line);padding-top:12px">
+        <select id="bs_${esc(b.id)}" style="width:auto">${Object.keys(BUG_TH).map(k => `<option value="${k}" ${b.status === k ? 'selected' : ''}>${BUG_TH[k]}</option>`).join('')}</select>
+        <input type="text" id="bn_${esc(b.id)}" placeholder="หมายเหตุถึงคนแจ้ง" value="${esc(b.note)}" style="flex:1;min-width:180px">
+        <button class="btn sm" onclick="saveBug('${esc(b.id)}')" ${state.busy ? 'disabled' : ''}>บันทึก</button></div>
+      ${b.updatedBy ? `<p class="note" style="margin:8px 0 0">อัปเดตล่าสุดโดย ${esc(b.updatedBy)} ${when(b.updatedAt)}</p>` : ''}</div>`).join('')
+      : '<div class="empty">ไม่มีรายการ</div>');
+}
+function showBugImage(id){
+  state.bugImg = {id, src:''}; render();
+  call('staffBugImage', id).then(src => { if (state.bugImg) { state.bugImg.src = src; render(); } })
+    .catch(e => { state.bugImg = null; toast(e.message, true); render(); });
+}
+function bugImgView(){
+  const e = state.bugImg;
+  return modal('bugImg', 'ภาพที่แนบ · ' + esc(e.id), e.src ? `<img src="${e.src}" alt="ภาพหน้าจอที่แนบ" style="width:100%;border-radius:10px;border:1px solid var(--line)">` : loading(), '', 'wide');
+}
+function saveBug(id){
+  state.busy = 'bugsave'; render();
+  const st = $('bs_' + id), nt = $('bn_' + id);
+  call('staffUpdateBug', id, st ? st.value : 'new', nt ? nt.value : '').then(b => { state.bugs = b; toast('บันทึกแล้ว'); return call('staffData'); })
+    .then(d => { state.data = d; }).catch(e => { toast(e.message, true); }).then(() => { state.busy = ''; render(); });
+}
+
+// ---------------------------------------------------------------- ใบกำกับภาษี
+
+const findOrder = no => orders().find(o => o.no === no);
+function startIssue(no){ const o = findOrder(no); state.issue = {no, f:{...o.form}, err:'', busy:false}; render(); }
+function issueView(){
+  const s = state.issue, o = findOrder(s.no), f = s.f;
+  const body = `<div class="box" style="margin-top:0;display:flex;justify-content:space-between;gap:10px"><span>ยอดรวม</span><b class="num">${baht(o.total)}</b></div>
+    <label for="i_tname">ชื่อบุคคล / นิติบุคคล</label><input type="text" id="i_tname" value="${esc(f.tname || f.company || f.name)}">
+    <label for="i_taddr">ที่อยู่</label><textarea id="i_taddr">${esc(f.taddr)}</textarea>
+    <div class="two"><div><label for="i_tid">เลขประจำตัวผู้เสียภาษี</label><input type="text" id="i_tid" inputmode="numeric" maxlength="13" placeholder="13 หลัก" value="${esc(f.tid)}"></div>
+      <div><label for="i_tbranch">สาขา</label><input type="text" id="i_tbranch" value="${esc(f.tbranch || 'สำนักงานใหญ่')}"></div></div>
+    <p class="note" style="margin:10px 0 0">ตรวจข้อมูลผู้ซื้อก่อนออก เลขที่ใบกำกับจะรันต่อเนื่องและแก้ไม่ได้</p>
+    ${s.err ? `<div class="err">${esc(s.err)}</div>` : ''}`;
+  return modal('issue', 'ออกใบกำกับภาษี', body, `<div class="r"><button class="btn sec" onclick="set('issue',null)">ยกเลิก</button><button class="btn" onclick="issue()" ${s.busy ? 'disabled' : ''}>${s.busy ? 'กำลังออก…' : 'ยืนยันออกใบกำกับภาษี'}</button></div>`, '', esc(o.no));
+}
+function issue(){
+  const s = state.issue, buyer = {};
+  ['tname','taddr','tid','tbranch'].forEach(k => { buyer[k] = $('i_'+k).value.trim(); s.f[k] = buyer[k]; });
+  if (!buyer.tname || !buyer.taddr) { s.err = 'กรอกชื่อและที่อยู่'; return render(); }
+  if (!/^\d{13}$/.test(buyer.tid)) { s.err = 'เลขประจำตัวผู้เสียภาษีต้องเป็นตัวเลข 13 หลัก'; return render(); }
+  s.busy = true; s.err = ''; render();
+  call('staffIssueInvoice', s.no, buyer).then(inv => {
+    const o = findOrder(s.no); o.inv = inv; Object.assign(o.form, buyer, {tax:true});
+    state.issue = null; state.inv = s.no; render(); toast('ออกใบกำกับภาษี ' + inv.no + ' แล้ว'); load();
+  }).catch(e => { s.busy = false; s.err = e.message; render(); });
+}
+function openInv(no){ state.inv = no; render(); }
+function invView(){
+  const o = findOrder(state.inv), v = o.inv, S = state.data.seller, d = state.data;
+  return `<div class="ov" onclick="if(event.target===this)openInv(null)"><div class="dlg wide">
+    <div class="invbar"><button class="btn sec" onclick="openInv(null)">ปิด</button><button class="btn" onclick="window.print()">${ic('doc', 16)}พิมพ์ / บันทึก PDF</button></div>
+    <div class="inv ${d.sandbox ? 'demo' : ''}"><div class="top"><div><h2>${esc(S.name)}</h2><p>${esc(S.addr)}</p><p>เลขประจำตัวผู้เสียภาษี ${esc(S.tid)} · ${esc(S.branch)}</p></div>
+      <div class="meta"><h2>ใบเสร็จรับเงิน / ใบกำกับภาษี<small>ต้นฉบับ</small></h2><p>เลขที่ <b>${esc(v.no)}</b></p><p>วันที่ ${thDate(new Date(v.date))}</p><p>อ้างอิงออเดอร์ ${esc(o.no)}</p></div></div>
+    <div class="buyer"><p><b>ผู้ซื้อ</b> ${esc(v.name)}</p><p style="white-space:pre-line">${esc(v.addr)}</p><p>เลขประจำตัวผู้เสียภาษี ${esc(v.tid)}${v.branch ? ' · ' + esc(v.branch) : ''}</p></div>
+    <table><tr><th>ลำดับ</th><th>รายการ</th><th>จำนวน</th><th>ราคาต่อหน่วย</th><th>จำนวนเงิน</th></tr>
+      ${o.items.map((l,i) => `<tr><td>${i+1}</td><td>${esc(l.brandName)} ${esc(l.name)} ${esc(l.size)}</td><td>${l.qty}</td><td>${num(l.price)}</td><td>${num(l.sum)}</td></tr>`).join('')}</table>
+    <div class="sumr"><table>
+      ${o.discount ? `<tr><td>รวมราคาสินค้า</td><td>${num(o.items.reduce((a, l) => a + l.sum, 0))}</td></tr><tr><td>ส่วนลด${o.coupon ? ' (' + esc(o.coupon) + ')' : ''}</td><td>-${num(o.discount)}</td></tr>` : ''}
+      <tr><td>มูลค่าสินค้าก่อนภาษีมูลค่าเพิ่ม</td><td>${num(v.beforeVat)}</td></tr><tr><td>ภาษีมูลค่าเพิ่ม ${d.vatRate}%</td><td>${num(v.vat)}</td></tr>
+      <tr class="g"><td>จำนวนเงินรวมทั้งสิ้น</td><td>${num(v.total)}</td></tr></table></div>
+    <p class="words">(${bahtText(v.total)})</p><p style="margin-top:8px;color:#555">${d.vatIncluded ? 'ราคาต่อหน่วยรวมภาษีมูลค่าเพิ่มแล้ว · ' : ''}ชำระโดย ${esc(o.channel || 'ChillPay')}${o.txId ? ' · รายการ ' + esc(o.txId) : ''}</p>
+    <div class="sign"><div>ผู้รับเงิน</div><div>ผู้มีอำนาจลงนาม</div></div></div></div></div>`;
+}
+
+// ---------------------------------------------------------------- สรุปยอดขาย (เฉพาะออเดอร์ที่ชำระแล้ว)
+
+function buckets(){
+  const now = new Date(), out = [];
+  if (state.grp === 'day') for (let i = 13; i >= 0; i--){ const s = startDay(now); s.setDate(s.getDate()-i); const e = new Date(s); e.setDate(e.getDate()+1);
+    out.push({s, e, label: s.getDate()+'/'+(s.getMonth()+1), full: thDate(s)}); }
+  else if (state.grp === 'week') for (let i = 7; i >= 0; i--){ const s = startWeek(now); s.setDate(s.getDate()-7*i); const e = new Date(s); e.setDate(e.getDate()+7);
+    const l = new Date(e); l.setDate(l.getDate()-1); out.push({s, e, label: s.getDate()+'/'+(s.getMonth()+1), full: thDate(s)+' – '+thDate(l)}); }
+  else for (let i = 5; i >= 0; i--){ const s = new Date(now.getFullYear(), now.getMonth()-i, 1), e = new Date(s.getFullYear(), s.getMonth()+1, 1);
+    out.push({s, e, label: TM[s.getMonth()], full: TM[s.getMonth()]+' '+(s.getFullYear()+543)}); }
+  const ps = paid();
+  out.forEach(b => Object.assign(b, agg(ps.filter(o => o.ts >= b.s.getTime() && o.ts < b.e.getTime())),
+    {vat: ps.filter(o => o.ts >= b.s.getTime() && o.ts < b.e.getTime()).reduce((a,o) => a + o.vat, 0)}));
+  return out;
+}
+function chart(bs){
+  const mx = Math.max(1, ...bs.map(b => b.sum)), p = Math.pow(10, Math.floor(Math.log10(mx))), top = Math.ceil(mx/p)*p;
+  return `<div class="chart"><div class="yax"><span>${top.toLocaleString('th-TH')}</span><span>${(top/2).toLocaleString('th-TH')}</span><span>0</span></div>
+    <div class="plot">${bs.map(b => `<div class="col" tabindex="0"><div class="cb" style="height:${b.sum/top*100}%"></div>
+      <div class="tip"><b>${b.full}</b>${baht(b.sum)} · ${b.n} ออเดอร์</div><span class="xl">${b.label}</span></div>`).join('')}</div></div>`;
+}
+function summaryView(){
+  const ps = paid();
+  const tile = (label, r, icn, cls) => { const a = agg(ps.filter(o => o.ts >= fromOf(r)));
+    return `<div class="stat"><div class="si ${cls}">${ic(icn)}</div><div><span>${label}</span><b>${num(a.sum)}</b><small>บาท · ${a.n} ออเดอร์ · ${a.qty} ชิ้น</small></div></div>`; };
+  const bs = buckets(), gl = {day:'รายวัน 14 วันล่าสุด', week:'รายสัปดาห์ 8 สัปดาห์ล่าสุด (จันทร์–อาทิตย์)', month:'รายเดือน 6 เดือนล่าสุด'}[state.grp];
+  const d30 = startDay(new Date()); d30.setDate(d30.getDate()-29);
+  const mo = ps.filter(o => o.ts >= d30.getTime());
+  const group = (keyOf, nameOf) => { const m = {};
+    mo.forEach(o => o.items.forEach(l => { const k = keyOf(l); (m[k] = m[k] || {name:nameOf(l), q:0, v:0}).q += l.qty; m[k].v += l.sum; }));
+    return Object.values(m).sort((a,b) => b.v - a.v); };
+  const byB = group(l => l.brand, l => l.brandName), byP = group(l => l.brand+':'+l.sku, l => l.brandName+' · '+l.name);
+  const mp = Math.max(1, ...byP.map(x => x.v)), mb = Math.max(1, ...byB.map(x => x.v));
+  const byC = {}; mo.forEach(o => { const k = o.channel || 'ไม่ทราบช่องทาง'; (byC[k] = byC[k] || {n:0, v:0}).n++; byC[k].v += o.total; });
+  const mc = Math.max(1, ...Object.values(byC).map(x => x.v));
+  const byK = {}; mo.filter(o => o.discount).forEach(o => { const k = o.coupon || 'อื่น ๆ'; (byK[k] = byK[k] || {n:0, d:0, v:0}).n++; byK[k].d += o.discount; byK[k].v += o.total; });
+  const empty = '<tr><td colspan="3" class="note">ยังไม่มียอดขาย</td></tr>';
+  return pageHead('สรุปยอดขาย', 'นับเฉพาะออเดอร์ที่ชำระแล้ว ตามวันที่สั่งซื้อ') +
+    `<div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">${tile('วันนี้','today','cash','m')}${tile('สัปดาห์นี้','week','summary','s')}${tile('เดือนนี้','month','orders','c')}</div>
+    <div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px"><h3 style="margin:0">ยอดขาย (บาท) ${gl}</h3>
+      ${seg(state.grp, 'grp', [['day','รายวัน'],['week','รายสัปดาห์'],['month','รายเดือน']])}</div>${chart(bs)}
+      <details><summary class="note" style="cursor:pointer">ดูตัวเลขแต่ละช่วง</summary>
+      <table class="t" style="margin-top:8px"><tr><th>ช่วงเวลา</th><th>ออเดอร์</th><th>ชิ้น</th><th>ยอดขาย</th><th>VAT</th></tr>
+      ${bs.slice().reverse().map(b => `<tr><td>${b.full}</td><td>${b.n}</td><td>${b.qty}</td><td>${num(b.sum)}</td><td>${num(b.vat)}</td></tr>`).join('')}</table></details></div>
+    <div class="cols"><div class="card"><h3>ตามแบรนด์ · 30 วัน</h3><table class="t"><tr><th>แบรนด์</th><th>ชิ้น</th><th>ยอดขาย</th></tr>
+      ${byB.map(x => `<tr><td>${esc(x.name)}<div class="hb" style="width:${x.v/mb*100}%"></div></td><td>${x.q}</td><td>${num(x.v)}</td></tr>`).join('') || empty}</table></div>
+    <div class="card"><h3>ตามสินค้า · 30 วัน</h3><table class="t"><tr><th>สินค้า</th><th>ชิ้น</th><th>ยอดขาย</th></tr>
+      ${byP.map(x => `<tr><td>${esc(x.name)}<div class="hb" style="width:${x.v/mp*100}%"></div></td><td>${x.q}</td><td>${num(x.v)}</td></tr>`).join('') || empty}</table></div>
+    <div class="card"><h3>ตามช่องทางชำระเงิน · 30 วัน</h3><table class="t"><tr><th>ช่องทาง</th><th>ออเดอร์</th><th>ยอดขาย</th></tr>
+      ${Object.keys(byC).sort((a,b) => byC[b].v - byC[a].v).map(k => `<tr><td>${esc(k)}<div class="hb" style="width:${byC[k].v/mc*100}%;background:var(--sky-deep)"></div></td><td>${byC[k].n}</td><td>${num(byC[k].v)}</td></tr>`).join('') || empty}</table></div>
+    ${Object.keys(byK).length ? `<div class="card"><h3>คูปองที่ใช้ · 30 วัน</h3><table class="t"><tr><th>โค้ด</th><th>ออเดอร์</th><th>ส่วนลดรวม</th></tr>
+      ${Object.keys(byK).sort((a,b) => byK[b].d - byK[a].d).map(k => `<tr><td>${esc(k)}<br><span class="note">ยอดขาย ${num(byK[k].v)}</span></td><td>${byK[k].n}</td><td>${num(byK[k].d)}</td></tr>`).join('')}</table></div>` : ''}</div>
+    <p class="note" style="margin-top:12px">ยอดขายรวมและตามช่องทาง = ยอดที่ลูกค้าจ่ายจริงหลังหักคูปอง · ตามแบรนด์และตามสินค้า = ราคาสินค้าก่อนหักคูปอง (หลังราคาพิเศษแล้ว)</p>`;
+}
+
+if (state.token) { render(); load(); }
+else if (LSR.get()) { $('root').innerHTML = `<div class="auth">${loading()}</div>`; resume().then(ok => { render(); if (ok) load(); }); }
+else render();
+</script>
+</body>
+</html>

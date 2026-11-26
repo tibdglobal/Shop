@@ -981,7 +981,7 @@ function sendHelp(){
   let h = null;
   try { h = JSON.parse(localStorage.getItem('qrstaff.hint') || 'null'); } catch(e){}
   if (!h || !h.exp || h.exp < Date.now()) return;
-  $('staffbtn').innerHTML = `<a class="staffbtn" href="${esc(BOOT.base)}?view=staff" target="_top">
+  $('staffbtn').innerHTML = `<a class="staffbtn" href="staff/" target="_top">
     ${svg(I.back, 16)}หลังร้าน${h.name ? ' · ' + esc(h.name) : ''}</a>`;
 })();
 
