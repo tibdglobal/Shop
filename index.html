@@ -970,6 +970,14 @@ function sendHelp(){
 // ---------------------------------------------------------------- ปุ่มกลับหลังร้าน (เฉพาะเครื่องที่พนักงานล็อกอินอยู่)
 
 (function staffShortcut(){
+  // มาจากปุ่ม "ดูหน้าร้าน" ในหลังร้าน (?staff=ชื่อ) จำไว้ 12 ชั่วโมง แล้วเอาพารามิเตอร์ออกจากแถบที่อยู่
+  try {
+    const q = new URLSearchParams(location.search), n = q.get('staff');
+    if (n != null) {
+      localStorage.setItem('qrstaff.hint', JSON.stringify({name: n === '1' ? '' : n.slice(0, 40), exp: Date.now() + 12 * 36e5}));
+      q.delete('staff'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
+    }
+  } catch(e){}
   let h = null;
   try { h = JSON.parse(localStorage.getItem('qrstaff.hint') || 'null'); } catch(e){}
   if (!h || !h.exp || h.exp < Date.now()) return;
