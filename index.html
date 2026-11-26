@@ -220,6 +220,15 @@
   .notice b{display:block;color:var(--ink);margin-bottom:2px}
   .backtab{background:var(--mint-soft);border-radius:12px;padding:11px 14px;font-size:14px;margin:12px 0 0;text-align:left;color:var(--ink2)}
   .backtab b{color:var(--mint-deep)}
+  .live{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px auto 4px;font-variant-numeric:tabular-nums;color:var(--ink2);font-size:14px}
+  .live b{font-size:22px;color:var(--ink);letter-spacing:.5px}
+  .live i{width:10px;height:10px;border-radius:50%;background:var(--mint-deep);animation:pulse 1.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+  .paidat{font-size:15px;color:var(--ink);font-weight:600;margin:6px 0 0}
+  .psec{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);margin-top:1px}
+  .lastord{text-align:center;margin:10px 0 0}
+  .lastord button{border:0;background:none;color:var(--mint-deep);font-size:14px;text-decoration:underline;cursor:pointer;padding:10px 8px;min-height:44px}
+  .sheet:focus,.drawer:focus{outline:none}
   .seller{margin:14px auto 0;max-width:520px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.6;display:flex;flex-direction:column;gap:1px}
   .seller b{color:var(--ink2);font-weight:600;font-size:13px}
   .slabel{display:inline-block;align-self:flex-start;margin-top:4px;background:var(--coral-soft);color:var(--coral-dk);font-size:12px;font-weight:600;border-radius:6px;padding:2px 7px;line-height:1.4}
@@ -411,7 +420,7 @@ function setLang(v){
   if (state.help) readHelp();
   state.lang = v; LS.set('lang', v); state.cat = 'all'; applyLang(); render();
 }
-const langSeg = cls => `<span class="lang ${cls || ''}" role="group" aria-label="Language"><button class="${state.lang === 'th' ? 'on' : ''}" onclick="setLang('th')">TH</button><button class="${state.lang === 'en' ? 'on' : ''}" onclick="setLang('en')">EN</button></span>`;
+const langSeg = cls => `<span class="lang ${cls || ''}" role="group" aria-label="Language"><button class="${state.lang === 'th' ? 'on' : ''}" aria-pressed="${state.lang === 'th'}" onclick="setLang('th')">TH</button><button class="${state.lang === 'en' ? 'on' : ''}" aria-pressed="${state.lang === 'en'}" onclick="setLang('en')">EN</button></span>`;
 applyLang();
 // ตะกร้าเก็บไว้ในเครื่อง ตัดสินค้าที่ไม่มีแล้วหรือยังไม่มีราคาออก
 (function(){ const c = LS.get('cart') || {};
@@ -453,6 +462,18 @@ const I = {
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>', receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>', filter:'<path d="M4 6h16M7 12h10M10 18h4"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>', bag:'<path d="M6 7h12l1 13H5z"/><path d="M9 7a3 3 0 016 0"/>', grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'
 };
 
+/** ออเดอร์ที่จ่ายล่าสุดในเครื่องนี้ (30 วัน) เปิดกลับไปดู/รับใบเสร็จได้ */
+function lastOrderLink(){
+  const o = LS.get('lastOrder');
+  if (!o || !o.no || Date.now() - (o.at || 0) > 30 * 864e5) return '';
+  return `<p class="lastord"><button onclick="openLastOrder()">${L('ดูออเดอร์ล่าสุด ', 'View last order ')}${esc(o.no)}</button></p>`;
+}
+function openLastOrder(){
+  const o = LS.get('lastOrder'); if (!o) return;
+  call('getOrderStatus', o.no, o.key).then(i => { state.order = {no:o.no, key:o.key}; state.info = i; state.rc = null; applyStatus(); })
+    .catch(e => { state.err = e.message; LS.set('lastOrder', null); render(); });
+}
+
 /** ผู้ขาย: ให้ลูกค้ารู้ก่อนจ่ายว่าจ่ายให้ใคร */
 function sellerFoot(){
   const s = SHOP.seller || {};
@@ -468,7 +489,21 @@ function call(fn, ...args){
   return shopApi(fn, args);
 }
 
-function go(step){ state.step = step; state.err = ''; state.detail = null; render(); window.scrollTo(0,0); }
+function go(step){
+  state.step = step; state.err = ''; state.waitErr = ''; state.detail = null; render(); window.scrollTo(0,0);
+  if (step === 'cart') recheckCoupon();
+}
+/** คูปองที่จำไว้ในเครื่องอาจหมดอายุแล้ว ตรวจซ้ำตอนเปิดตะกร้า ใช้ไม่ได้ก็เอาออกพร้อมบอกเหตุผล */
+function recheckCoupon(){
+  const c = state.coupon;
+  if (!c || !count()) return;
+  call('checkCoupon', c.code, Object.keys(state.cart).map(id => ({id, qty: state.cart[id]})), state.lang).catch(e => {
+    if (!state.coupon || state.coupon.code !== c.code || /เชื่อมต่อ|HTTP|network|fetch/i.test(e.message)) return;
+    if (/ซื้อครบ|minimum/i.test(e.message)) return; // ยอดยังไม่ถึง แสดงคำเตือนในกล่องคูปองอยู่แล้ว
+    state.coupon = null; LS.set('coupon', null); state.cpErr = L('เอาโค้ด ', 'Removed code ') + c.code + L(' ออกแล้ว: ', ': ') + e.message;
+    if (state.step === 'cart') { saveForm(); render(); }
+  });
+}
 function qty(id, d){
   if (state.step === 'cart') saveForm(); // เก็บข้อมูลที่พิมพ์ในฟอร์มไว้ก่อนวาดหน้าใหม่
   state.cart[id] = Math.max(0, Math.min(99, (state.cart[id]||0) + d)); if (!state.cart[id]) delete state.cart[id]; LS.set('cart', state.cart); render(); }
@@ -514,8 +549,19 @@ function render(){
   document.body.dataset.step = state.step;
   $('app').innerHTML = v.main;
   $('bar').innerHTML = v.bar ? '<div>'+v.bar+'</div>' : '';
-  $('ov').innerHTML = state.help ? helpView() : state.rcOpen && state.rc && state.step === 'done' ? rcView() : state.detail ? detailView(PRODUCTS.find(p => p.id === state.detail)) : state.drawer && state.step === 'catalog' ? drawerView() : '';
+  const hadOv = !!$('ov').innerHTML;
+  $('ov').innerHTML = state.ask ? askView() : state.help ? helpView() : state.rcOpen && state.rc && state.step === 'done' ? rcView() : state.detail ? detailView(PRODUCTS.find(p => p.id === state.detail)) : state.drawer && state.step === 'catalog' ? drawerView() : '';
+  const dlg = $('ov').querySelector('.sheet,.drawer');
+  if (dlg && !hadOv) { if (!dlg.hasAttribute('tabindex')) dlg.setAttribute('tabindex', '-1'); try { dlg.focus({preventScroll:true}); } catch(e){} }
 }
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (state.ask) askDone(false);
+  else if (state.help) { state.help = null; render(); }
+  else if (state.rcOpen) closeRc();
+  else if (state.detail) show(null);
+  else if (state.drawer) setDrawer(false);
+});
 
 const closedMsg = () => L(SHOP.closedMsg, SHOP.closedMsgEn || 'Not open for sale yet');
 /** ปุ่มตะกร้าด้านล่าง ใช้ร่วมกันทั้งหน้าแรกและหน้าสินค้า */
@@ -618,6 +664,7 @@ function shopView(){
           : `<div class="empty"><b>${L('ไม่พบสินค้า', 'No products found')}</b>${q ? L('ลองคำค้นอื่น หรือ', 'Try another keyword or') : ''} <button class="back" style="position:static;display:inline-flex;margin-top:10px;box-shadow:none;border:1px solid var(--line)" onclick="state.q='';state.cat='all';render()">${L('ดูสินค้าทั้งหมด' + (b ? 'ในแบรนด์นี้' : ''), 'see all products' + (b ? ' in this brand' : ''))}</button></div>`}
         <p class="note" style="margin:18px 0 0;text-align:center">${SHOP.vatIncluded ? L('ราคารวมภาษีมูลค่าเพิ่มแล้ว', 'Prices include VAT') : L('ราคายังไม่รวมภาษีมูลค่าเพิ่ม ', 'Prices exclude VAT ') + SHOP.vatRate + '%'}</p>
         <p class="helpln"><button onclick="openHelp()">${L('มีปัญหาในการสั่งซื้อหรือชำระเงิน? แจ้งเรา', 'Problem with your order or payment? Let us know')}</button></p>
+        ${lastOrderLink()}
         ${sellerFoot()}
       </section></div></main>`;
   return {main, bar: cartBar() || (SHOP.open ? `<button class="btn c" disabled>${L('เลือกสินค้าเพื่อเริ่ม', 'Choose products to start')}</button>` : '')};
@@ -695,7 +742,7 @@ function cartView(){
     ${sellerFoot()}
     <p class="helpln"><button onclick="openHelp()">${L('มีปัญหาในการสั่งซื้อหรือชำระเงิน? แจ้งเรา', 'Problem with your order or payment? Let us know')}</button></p></div></main>`;
   return {main, bar: state.busy ? `<button class="btn c" disabled>${L('กำลังสร้างรายการชำระเงิน…', 'Creating payment…')}</button>`
-    : `<div class="paybar"><div><small>${L('ยอดชำระ', 'Total')}</small><b>${baht(t.total)}</b></div><button class="btn" onclick="toPay()">${L('ชำระเงิน', 'Pay')}${svg(I.next, 18)}</button></div>`};
+    : `<div class="paybar"><div><small>${L('ยอดชำระ', 'Total')}</small><b>${baht(t.total)}</b><span class="psec">${svg(I.lock, 12)}${L('จ่ายที่ ChillPay อย่างปลอดภัย', 'Secure payment on ChillPay')}</span></div><button class="btn" onclick="toPay()">${L('ชำระเงิน', 'Pay')}${svg(I.next, 18)}</button></div>`};
 }
 // ---------------------------------------------------------------- โค้ดส่วนลด
 
@@ -782,7 +829,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && st
 
 function applyStatus(){
   const s = state.info.status;
-  if (s === 'PAID'){ state.cart = {}; LS.set('cart', null); state.coupon = null; LS.set('coupon', null); go('done'); } // จ่ายแล้ว คูปองไม่ติดไปออเดอร์ถัดไป
+  if (s === 'PAID'){ LS.set('lastOrder', {no: state.order.no, key: state.order.key, at: Date.now()}); state.cart = {}; LS.set('cart', null); state.coupon = null; LS.set('coupon', null); go('done'); } // จ่ายแล้ว คูปองไม่ติดไปออเดอร์ถัดไป
   else if (s === 'PENDING'){ if (state.step !== 'wait') go('wait'); else render(); }
   else go('ended');
 }
@@ -795,8 +842,9 @@ function waitView(){
   const until = o.expires ? thTime(o.expires).split(' ').pop() : '';
   const head = `<div class="langrow">${langSeg('sm')}</div><h2>${L('ชำระเงินออเดอร์', 'Pay for order')} ${esc(o.no)}</h2><div class="due"><span>${L('ยอดที่ต้องชำระ', 'Amount due')}</span><b>${baht(o.total)}</b></div>`;
   const help = `<p class="helpln"><button onclick="openHelp('paid_not_done')">${L('จ่ายเงินแล้วแต่หน้านี้ไม่เปลี่ยน? แจ้งเรา', 'Paid but this page has not changed? Let us know')}</button></p>`;
+  const werr = state.waitErr ? `<div class="err">${esc(state.waitErr)}</div>` : '';
   if (expired) {
-    const main = `<main class="narrow">${head}
+    const main = `<main class="narrow">${head}${werr}
       <div class="sim"><div class="tick x" style="margin:0 auto 10px">!</div><h3>${L('ลิงก์ชำระเงินหมดอายุแล้ว', 'The payment link has expired')}</h3>
         <p>${L('ถ้ายังไม่ได้จ่าย กด "สร้างลิงก์ใหม่" สินค้ายังอยู่ในตะกร้า ถ้าจ่ายไปแล้วช่วงท้าย กด "ตรวจสถานะ" ระบบยังตรวจให้อยู่', 'If you have not paid, tap "New payment link"; your items stay in the cart. If you paid just before it expired, tap "Check status"; we are still checking.')}</p></div>
       <button class="btn ghost c" onclick="poll()">${L('ตรวจสถานะการชำระเงิน', 'Check payment status')}</button>
@@ -804,7 +852,7 @@ function waitView(){
     return {main, bar:`<button class="btn c" onclick="renewOrder()">${L('สร้างลิงก์ใหม่', 'New payment link')}</button>`};
   }
   const main = `<main class="narrow">${head}
-    ${state.popupBlocked ? `<div class="notice"><b>${L('หน้าชำระเงินยังไม่เปิด', 'The payment page did not open')}</b>${L('กดปุ่ม "ไปหน้าชำระเงิน" ด้านล่างเพื่อจ่ายเงิน', 'Tap "Go to payment" below to pay')}</div>` : ''}
+    ${werr}${state.popupBlocked ? `<div class="notice"><b>${L('หน้าชำระเงินยังไม่เปิด', 'The payment page did not open')}</b>${L('กดปุ่ม "ไปหน้าชำระเงิน" ด้านล่างเพื่อจ่ายเงิน', 'Tap "Go to payment" below to pay')}</div>` : ''}
     <div class="sim"><div class="spin"></div><h3>${L('รอการชำระเงิน', 'Waiting for payment')}</h3>
       <p>${L('ชำระเงินในหน้าของ ChillPay แล้วกลับมาที่หน้านี้ ระบบจะแสดงผลเองเมื่อได้รับเงิน', 'Pay on the ChillPay page, then come back here. This page updates automatically once payment is received.')}</p>
       <div class="backtab"><b>${L('จ่ายเสร็จแล้ว กลับมาที่แท็บ Scan & Shop นี้', 'After paying, come back to this Scan & Shop tab')}</b><br>${L('ถ้าหาแท็บไม่เจอ เปิดลิงก์ร้านหรือสแกน QR อีกครั้งในเบราว์เซอร์เดิม ระบบจำออเดอร์นี้ไว้ให้', 'If you cannot find it, open the shop link or scan the QR again in the same browser. We remember this order.')}</div>
@@ -825,17 +873,32 @@ function renewOrder(){
     state.info = o;
     if (o.status === 'PAID') return applyStatus();
     state.order = null; LS.set('order', null); go('cart');
-  }).catch(e => { state.err = e.message; poll(); });
+  }).catch(e => { state.waitErr = e.message; render(); poll(); });
 }
 
+/** กล่องยืนยันในหน้า (แทน confirm ของเบราว์เซอร์ ซึ่งไม่เปลี่ยนภาษาและบางแอปบล็อก) */
+function ask(title, text, okText, onOk, cancelText){ state.ask = {title, text, okText, cancelText, onOk}; render(); }
+function askDone(ok){ const a = state.ask; state.ask = null; render(); if (ok && a && a.onOk) a.onOk(); }
+function askView(){
+  const a = state.ask;
+  return `<div class="ov" onclick="if(event.target===this)askDone(false)"><div class="sheet help" role="alertdialog" aria-label="${esc(a.title)}" tabindex="-1">
+    <div class="hh"><b>${esc(a.title)}</b></div>
+    <div class="in"><p style="margin:4px 0 16px">${esc(a.text)}</p>
+      <button class="btn c" onclick="askDone(true)">${esc(a.okText)}</button>
+      <button class="btn ghost c" style="margin-top:10px" onclick="askDone(false)">${esc(a.cancelText || L('ไม่ใช่ กลับไป', 'No, go back'))}</button></div></div></div>`;
+}
 function cancelOrder(){
-  if (!confirm(L('ยกเลิกรายการชำระเงินนี้? ถ้าจ่ายไปแล้ว ระบบจะแสดงว่าชำระสำเร็จแทน', 'Cancel this payment? If you have already paid, the page will show payment complete instead.'))) return;
+  ask(L('ยกเลิกรายการชำระเงินนี้?', 'Cancel this payment?'),
+    L('ถ้าจ่ายไปแล้ว ระบบจะแสดงว่าชำระสำเร็จแทน สินค้ายังอยู่ในตะกร้า', 'If you have already paid, the page will show payment complete instead. Your items stay in the cart.'),
+    L('ยกเลิกรายการ', 'Cancel payment'), doCancelOrder, L('ไม่ยกเลิก', 'Keep waiting'));
+}
+function doCancelOrder(){
   clearTimeout(timer);
   call('cancelOrder', state.order.no, state.order.key).then(o => {
     state.info = o;
     if (o.status === 'PAID') return applyStatus();
     state.order = null; LS.set('order', null); go('cart');
-  }).catch(e => { alert(e.message); poll(); });
+  }).catch(e => { state.waitErr = e.message; render(); poll(); });
 }
 
 // รูปและชื่อสินค้าตามภาษาที่เลือก (ชื่อในออเดอร์เป็นชื่อ ณ ตอนสั่ง)
@@ -846,9 +909,14 @@ function doneView(){
   const main = `<main class="narrow"><div class="langrow">${langSeg('sm')}</div><div class="ticket"><div class="tick">✓</div><b>${L('ชำระเงินสำเร็จ', 'Payment complete')}</b>
     <div class="ono">${esc(o.no)}</div><p class="note" style="margin:0">${esc(L(SHOP.pickupMsg, SHOP.pickupMsgEn || 'Show this page to our staff to collect your items'))}</p>
     ${summary(withImg(o.items), o)}
-    <p class="note">${o.channel ? L('ช่องทาง: ', 'Paid with: ')+esc(o.channel)+' · ' : ''}${o.paidAt ? L('เวลา ', 'at ')+thTime(o.paidAt) : ''}</p>${o.tax ? `<p class="note" style="margin-top:4px">${o.taxEmail ? L('ใบกำกับภาษีเต็มรูปจะส่งไปที่ ', 'Your full tax invoice will be sent to ') + esc(o.taxEmail) : L('ขอใบกำกับภาษีเต็มรูปแล้ว พนักงานจะออกให้หลังตรวจข้อมูล', 'Full tax invoice requested. Our staff will issue it after checking your details')}</p>` : ''}</div>${rcCard(o)}<p class="helpln"><button onclick="openHelp()">${L('มีปัญหาในการสั่งซื้อหรือชำระเงิน? แจ้งเรา', 'Problem with your order or payment? Let us know')}</button></p></main>`;
+    <div class="live" aria-hidden="true"><i></i>${L('เวลาตอนนี้', 'Now')} <b id="liveclock">${clockNow()}</b></div>
+    ${o.paidAt ? `<p class="paidat">${L('จ่ายเมื่อ ', 'Paid at ')}${thTime(o.paidAt)}</p>` : ''}
+    <p class="note">${o.channel ? L('ช่องทาง: ', 'Paid with: ')+esc(o.channel) : ''}</p>${o.tax ? `<p class="note" style="margin-top:4px">${o.taxEmail ? L('ใบกำกับภาษีเต็มรูปจะส่งไปที่ ', 'Your full tax invoice will be sent to ') + esc(o.taxEmail) : L('ขอใบกำกับภาษีเต็มรูปแล้ว พนักงานจะออกให้หลังตรวจข้อมูล', 'Full tax invoice requested. Our staff will issue it after checking your details')}</p>` : ''}</div>${rcCard(o)}<p class="helpln"><button onclick="openHelp()">${L('มีปัญหาในการสั่งซื้อหรือชำระเงิน? แจ้งเรา', 'Problem with your order or payment? Let us know')}</button></p></main>`;
   return {main, bar:`<button class="btn c" onclick="again()">${L('สั่งซื้อรายการใหม่', 'Start a new order')}</button>`};
 }
+
+const clockNow = () => new Date().toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false, timeZone:'Asia/Bangkok'});
+setInterval(() => { const el = document.getElementById('liveclock'); if (el) el.textContent = clockNow(); }, 1000);
 
 function endedView(){
   const o = state.info;
@@ -916,7 +984,12 @@ function sendRc(){
   }).catch(e => { state.rcBusy = false; state.rcErr = e.message; render(); });
 }
 
-function again(){
+function again(force){
+  const o = state.info, r = o && o.rc;
+  if (!force && o && o.status === 'PAID' && !(r && (r.wanted === 'yes' || r.wanted === 'no' || r.status === 'REPLACED')))
+    return ask(L('ยังไม่ได้รับใบเสร็จ', 'You have not taken a receipt'),
+      L('ถ้าต้องการใบเสร็จ กด "รับใบเสร็จ" ก่อน หรือเปิดดูภายหลังได้จาก "ดูออเดอร์ล่าสุด" ท้ายหน้าร้าน', 'If you need a receipt, tap "Yes, please" first. You can also open it later from "View last order" at the bottom of the shop.'),
+      L('สั่งซื้อรายการใหม่', 'Start a new order'), () => again(true), L('กลับไปรับใบเสร็จ', 'Back to receipt'));
   const keepCart = state.info && state.info.status !== 'PAID' && state.info.status !== 'REVIEW';
   state.rc = null; state.rcOpen = false; state.rcErr = ''; state.rcMsg = '';
   state.order = null; state.info = null; LS.set('order', null);
